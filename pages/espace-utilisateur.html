@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espace utilisateur</title>
+    <link rel="stylesheet" href="./assets/css/style.css">
+</head>
+
+<body>
+    <!-- NAVBAR DYNAMIQUE -->
+    <header id="header"></header>
+
+    <script type="module">
+        import { loadNavbar, loadFooter } from "./assets/js/script.js";
+        loadNavbar();
+    </script>
+
+    <section class="admin-section">
+        <h2>Mes Informations Personnelles</h2>
+        <form id="profile-form">
+            <label>Nom Prénom</label><input type="text" id="edit-fullname">
+            <label>GSM</label><input type="text" id="edit-gsm">
+            <label>Adresse</label><input type="text" id="edit-address">
+            <button type="submit" class="btn-primary">Mettre à jour mon profil</button>
+        </form>
+    </section>
+    <main class="user-container">
+        <h1>Mes commandes</h1>
+        <!-- Liste des commandes -->
+        <ul id="liste-commandes" class="commandes-liste"></ul>
+        <div id="zone-detail"></div>
+    </main>
+    <script src="./assets/js/espace-utilisateur.js"></script>
+</body>
+
+</html>

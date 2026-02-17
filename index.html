@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vite & Gourmand</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="./assets/css/style.css">
+</head>
+
+<body>
+
+    <header id="header"></header>
+
+    <script type="module">
+        import { loadNavbar, loadFooter } from "./assets/js/script.js";
+        loadNavbar();
+        loadFooter();
+    </script>
+
+    <div class="descriptif">
+        <h1>Vite & Gourmand - Traiteur depuis 25 ans à Bordeaux</h1>
+        <p>Julie et José mettent leur savoir‑faire au service de vos événements,
+            Cuisine généreuse, adaptée à chaque occasion.</p>
+        <ul>
+            <li>Menus personnalisés</li>
+            <li>Produits frais et locaux</li>
+            <li>Livraison ponctuelle</li>
+        </ul>
+    </div>
+
+    <div class="cards">
+        <div class="card">
+            <h2>Claire</h2>
+            <br>
+            <img src="./assets/images/5etoile.png" alt="5 etoiles">
+            <br>
+            <div class="content">
+                <h3>“Service impeccable du début à la fin. Le menu était délicieux et parfaitement adapté à notre
+                    événement.”</h3>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Sandra</h2>
+            <br>
+            <img src="./assets/images/4Etoile.png" alt="4 etoiles">
+            <br>
+            <div class="content">
+                <h3>“Nous avons adoré ! Produits frais, présentation soignée et un vrai sens du détail. Je recommande.”
+                </h3>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Mathieu</h2>
+            <br>
+            <img src="./assets/images/4-5etoile.png" alt="4 et demi etoiles">
+            <br>
+            <div class="content">
+                <h3>“Très bonne organisation et plats généreux. Livraison ponctuelle et équipe très professionnelle.”
+                </h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER DYNAMIQUE (VIDE !) -->
+    <footer id="footer"></footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+
+</body>
+
+</html>

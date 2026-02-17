@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menus – Vite & Gourmand</title>
+    <link rel="stylesheet" href="./assets/css/style.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <header id="header"></header>
+
+    <script type="module">
+        import { loadNavbar, loadFooter } from "./assets/js/script.js";
+        loadNavbar();
+        loadFooter();
+    </script>
+
+    <main class="menus-page">
+
+        <!-- FILTRES -->
+<div class="filters">
+
+    <div class="filter-item">
+        <button data-filter="prix">Prix maximum</button>
+    </div>
+
+    <div class="filter-item">
+        <button data-filter="prix-range">Fourchette de prix</button>
+    </div>
+
+    <div class="filter-item">
+        <button data-filter="theme">Thème</button>
+    </div>
+
+    <div class="filter-item">
+        <button data-filter="regime">Régime</button>
+    </div>
+
+    <div class="filter-item">
+        <button data-filter="personnes">Nombre de personne minimum</button>
+    </div>
+
+</div>
+
+
+        <!-- CONTENEUR DES MENUS (rempli en JS) -->
+        <div id="menus-container"></div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer id="footer"></footer>
+
+    <!-- SCRIPT DES MENUS -->
+    <script type="module" src="./assets/js/menu.js"></script>
+
+</body>
+</html>

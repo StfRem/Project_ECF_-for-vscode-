@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Créer un compte</title>
+    <link rel="stylesheet" href="./assets/css/style.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR DYNAMIQUE -->
+    <header id="header"></header>
+
+    <script type="module">
+        import { loadNavbar } from "./assets/js/script.js";
+        loadNavbar();
+    </script>
+
+    <!-- CONTENU PRINCIPAL -->
+    <main class="register-container">
+
+        <div class="register-card">
+
+            <h1>Créer un compte</h1>
+
+            <form id="register-form">
+
+                <label for="fullname">Nom et Prénom</label>
+                <input type="text" id="fullname" required>
+
+                <label for="gsm">Numéro GSM</label>
+                <input type="text" id="gsm" required>
+
+                <label for="email">Email</label>
+                <input type="email" id="email" required>
+
+                <label for="address">Adresse</label>
+                <input type="text" id="address" required>
+                
+                <label for="address">Code postale</label>
+                <input type="text" id="cp" required>
+
+                <label for="password">Mot de passe</label>
+                <input type="password" id="password" required>
+
+                <p class="password-info">
+                    Le mot de passe doit contenir :
+                    <br>- 10 caractères minimum
+                    <br>- 1 majuscule
+                    <br>- 1 minuscule
+                    <br>- 1 chiffre
+                    <br>- 1 caractère spécial
+                </p>
+
+                <button type="submit" class="btn-detail">Créer mon compte</button>
+            </form>
+
+        </div>
+
+    </main>
+
+    <script src="./assets/js/register.js"></script>
+
+</body>
+</html>
