@@ -96,3 +96,33 @@ CREATE TABLE users (
   PRIMARY KEY (id),
   UNIQUE (email)
 );
+
+
+CREATE TABLE commandes (
+    id VARCHAR(50) NOT NULL,
+    userId VARCHAR(50) NOT NULL,
+    menuId INT NOT NULL,
+    menuTitre VARCHAR(150) NOT NULL,
+
+    nbPersonnes INT NOT NULL,
+    prixTotal DECIMAL(10,2) NOT NULL,
+    reduction TINYINT(1) DEFAULT 0,
+    materiel TINYINT(1) DEFAULT 0,
+
+    adresse TEXT,
+    ville VARCHAR(100),
+    cp VARCHAR(10),
+    distance INT,
+
+    datePrestation DATE,
+    heurePrestation TIME,
+
+    gsm VARCHAR(20),   -- ✔ CORRECT
+
+    statut VARCHAR(30) DEFAULT 'en attente',
+
+    historique JSON,
+    avis JSON,
+
+    PRIMARY KEY (id)
+);

@@ -53,7 +53,7 @@ form.addEventListener("submit", function (e) {
             alert("Compte créé avec succès !");
             alert(`EMAIL BIENVENUE ENVOYÉ À : ${email}`);
 
-            // 4. GESTION DE LA SESSION (Le strict nécessaire)
+            // 4. GESTION local storage (Le strict nécessaire)
             localStorage.setItem("userIsLogged", "true");
             
             // On crée un objet session SANS le mot de passe
@@ -61,6 +61,7 @@ form.addEventListener("submit", function (e) {
                 id: newUser.id,
                 fullname: newUser.fullname,
                 email: newUser.email,
+                gsm: newUser.gsm,
                 role: newUser.role
             };
             localStorage.setItem("user", JSON.stringify(userSession));
