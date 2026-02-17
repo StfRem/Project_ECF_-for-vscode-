@@ -82,3 +82,17 @@ INSERT INTO desserts (menu_id, nom, allergenes) VALUES
 (2, 'Mousse chocolat vegan', ''),
 (2, 'Tartelette fruits rouges', '(Gluten)'),
 (3, 'Assortiment de mini desserts', '(Gluten, Oeufs, Lactose)');
+
+CREATE TABLE users (
+  id VARCHAR(50) NOT NULL,
+  fullname VARCHAR(100) NOT NULL,
+  email VARCHAR(150) NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  gsm VARCHAR(20),
+  address TEXT,
+  cp VARCHAR(10),
+  role ENUM('admin','employe','utilisateur') DEFAULT 'utilisateur',
+  suspendu TINYINT(1) DEFAULT 0,
+  PRIMARY KEY (id),
+  UNIQUE (email)
+);
