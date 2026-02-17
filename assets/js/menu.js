@@ -13,9 +13,9 @@ const menus = [
         theme: "Noël",
         regime: "Classique",
         images: [
-            "./assets/images/entree_noel.jpg",
-            "./assets/images/repasnoel.jpg",
-            "./assets/images/repasnoel1.jpg"
+            "/assets/images/entree_noel.jpg",
+            "/assets/images/repasnoel.jpg",
+            "/assets/images/repasnoel1.jpg"
         ],
         entrees: [
             { nom: "Velouté de potimarron", allergenes: ["(Lactose)"] },
@@ -42,9 +42,9 @@ const menus = [
         theme: "Vegan",
         regime: "Vegan",
         images: [
-            "./assets/images/Vegan1.jpg",
-            "./assets/images/Vegan2.jpg",
-            "./assets/images/Vegan3.jpg"
+            "/assets/images/Vegan1.jpg",
+            "/assets/images/Vegan2.jpg",
+            "/assets/images/Vegan3.jpg"
         ],
         entrees: [
             { nom: "Salade fraîcheur", allergenes: [] },
@@ -71,9 +71,9 @@ const menus = [
         theme: "Événements",
         regime: "Classique",
         images: [
-            "./assets/images/event1.jpg",
-            "./assets/images/event2.jpg",
-            "./assets/images/event3.jpg"
+            "/assets/images/event1.jpg",
+            "/assets/images/event2.jpg",
+            "/assets/images/event3.jpg"
         ],
         entrees: [
             { nom: "Mini wraps variés", allergenes: ["(Gluten)"] },
@@ -148,11 +148,11 @@ function afficherMenus(liste) {
 
                     <div class="arrow-container">
                         <button class="arrow left" data-menu="${menu.id}">
-                            <img src="./assets/images/gauche.png" alt="gauche">
+                            <img src="/assets/images/gauche.png" alt="gauche">
                         </button>
 
                         <button class="arrow right" data-menu="${menu.id}">
-                            <img src="./assets/images/droite.png" alt="droite">
+                            <img src="/assets/images/droite.png" alt="droite">
                         </button>
                     </div>
                 </div>
