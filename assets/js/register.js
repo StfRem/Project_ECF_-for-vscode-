@@ -7,10 +7,11 @@ form.addEventListener("submit", function (e) {
     const gsm = document.getElementById("gsm").value.trim();
     const email = document.getElementById("email").value.trim();
     const address = document.getElementById("address").value.trim();
-    const password = document.getElementById("password").value.trim();
+    const ville = document.getElementById("ville").value.trim();
     const cp = document.getElementById("cp").value.trim();
+    const password = document.getElementById("password").value.trim();
 
-    // 1. VALIDATIONS (Ta structure d'origine)
+    // VALIDATIONS
     const regexPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{10,}$/;
     const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const regexGSM = /^0[67]\d{8}$/;
@@ -20,7 +21,7 @@ form.addEventListener("submit", function (e) {
         return;
     }
     if (!regexGSM.test(gsm)) {
-        alert("Numéro GSM invalide.Le numéro doit commencer par 06 ou 07.");
+        alert("Numéro GSM invalide. Le numéro doit commencer par 06 ou 07.");
         return;
     }
     if (!regexPassword.test(password)) {
@@ -28,7 +29,7 @@ form.addEventListener("submit", function (e) {
         return;
     }
 
-    // 2. PRÉPARATION DE L'OBJET POUR SQL
+    // OBJET ENVOYÉ AU PHP
     const newUser = {
         id: "USR-" + Date.now(),
         fullname,
@@ -36,11 +37,11 @@ form.addEventListener("submit", function (e) {
         email,
         address,
         cp,
-        password, // Envoyé au PHP
+        ville,
+        password,
         role: "utilisateur"
     };
 
-    // 3. ENVOI AU SERVEUR (PHP / SQL)
     fetch('../PHP/register.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -49,14 +50,12 @@ form.addEventListener("submit", function (e) {
     .then(response => response.json())
     .then(data => {
         if (data.status === "success") {
-            // ALERTES D'ORIGINE
+
             alert("Compte créé avec succès !");
             alert(`EMAIL BIENVENUE ENVOYÉ À : ${email}`);
 
-            // 4. GESTION local storage (Le strict nécessaire)
             localStorage.setItem("userIsLogged", "true");
-            
-            // On crée un objet session SANS le mot de passe
+
             const userSession = {
                 id: newUser.id,
                 fullname: newUser.fullname,
@@ -64,9 +63,9 @@ form.addEventListener("submit", function (e) {
                 gsm: newUser.gsm,
                 role: newUser.role
             };
+
             localStorage.setItem("user", JSON.stringify(userSession));
 
-            // 5. REDIRECTION
             const pendingMenu = localStorage.getItem("pendingMenu");
             if (pendingMenu) {
                 localStorage.removeItem("pendingMenu");
@@ -74,6 +73,7 @@ form.addEventListener("submit", function (e) {
             } else {
                 location.href = "./index.html";
             }
+
         } else {
             alert("Erreur : " + data.message);
         }
