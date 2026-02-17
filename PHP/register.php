@@ -1,6 +1,9 @@
 <?php
 header('Content-Type: application/json');
-require_once 'db.php'; // <-- Ton fichier PDO
+require_once 'Database.php';
+
+$db = new Database();
+$pdo = $db->getConnection();
 
 // 1. Récupération du JSON envoyé
 $json = file_get_contents('php://input');

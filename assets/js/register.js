@@ -41,7 +41,7 @@ form.addEventListener("submit", function (e) {
     };
 
     // 3. ENVOI AU SERVEUR (PHP / SQL)
-    fetch('./PHP/register.php', {
+    fetch('../PHP/register.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newUser)
