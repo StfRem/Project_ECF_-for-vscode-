@@ -23,8 +23,8 @@ try {
     $role = !empty($data['role']) ? $data['role'] : 'utilisateur';
 
     // 4. Préparation SQL
-    $sql = "INSERT INTO users (id, fullname, gsm, email, address, cp, password, role)
-            VALUES (:id, :fullname, :gsm, :email, :address, :cp, :password, :role)";
+    $sql = "INSERT INTO users (id, fullname, gsm, email, address, cp, ville, password, role)
+            VALUES (:id, :fullname, :gsm, :email, :address, :cp, :ville, :password, :role)";
 
     $stmt = $pdo->prepare($sql);
 
@@ -36,6 +36,7 @@ try {
         ':email'    => $data['email'],
         ':address'  => $data['address'] ?? null,
         ':cp'       => $data['cp'] ?? null,
+        ':ville'    => $data['ville'] ?? null,
         ':password' => $passwordHache,
         ':role'     => $role
     ]);

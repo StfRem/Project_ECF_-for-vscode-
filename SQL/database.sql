@@ -126,3 +126,4 @@ CREATE TABLE commandes (
 
     PRIMARY KEY (id)
 );
+ALTER TABLE users ADD ville VARCHAR(255) NOT NULL AFTER cp;
