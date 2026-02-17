@@ -13,14 +13,14 @@ form.addEventListener("submit", function (e) {
     // 1. VALIDATIONS (Ta structure d'origine)
     const regexPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{10,}$/;
     const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const regexGSM = /^(0[67]\d{8}|(\+33|0033)[67]\d{8})$/;
+    const regexGSM = /^0[67]\d{8}$/;
 
     if (!regexEmail.test(email)) {
         alert("Format d'email invalide.");
         return;
     }
     if (!regexGSM.test(gsm)) {
-        alert("Numéro GSM invalide.");
+        alert("Numéro GSM invalide.Le numéro doit commencer par 06 ou 07.");
         return;
     }
     if (!regexPassword.test(password)) {

@@ -2,102 +2,20 @@ import { loadNavbar, loadFooter } from "./script.js";
 loadNavbar();
 loadFooter();
 
-// ---------------------------------------------------------
-// Données des menus
-// ---------------------------------------------------------
-const menus = [
-    {
-        id: 1,
-        titre: "Noël Traditionnel",
-        description: "Un menu festif aux saveurs authentiques pour vos repas de fin d’année.",
-        theme: "Noël",
-        regime: "Classique",
-        images: [
-            "/assets/images/entree_noel.jpg",
-            "/assets/images/repasnoel.jpg",
-            "/assets/images/repasnoel1.jpg"
-        ],
-        entrees: [
-            { nom: "Velouté de potimarron", allergenes: ["(Lactose)"] },
-            { nom: "Saumon fumé sur blinis", allergenes: ["(Gluten", "Poisson", "Œufs)"] }
-        ],
-        plats: [
-            { nom: "Dinde farcie aux marrons", allergenes: ["(Lactose)"] },
-            { nom: "Filet de cabillaud sauce citron", allergenes: ["(Poisson)"] }
-        ],
-        desserts: [
-            { nom: "Bûche chocolat praliné", allergenes: ["(Lactose)", "(Gluten)", "(Œufs)"] },
-            { nom: "Tarte aux pommes caramélisées", allergenes: ["(Gluten)", "(Œufs)"] }
-        ],
-        personnesMin: 4,
-        prix: 70,
-        conditions: "À commander 2 jours avant. Conserver au frais.",
-        stock: 20
-    },
-
-    {
-        id: 2,
-        titre: "Menu Vegan Fraîcheur",
-        description: "Un menu 100% végétal, équilibré et savoureux.",
-        theme: "Vegan",
-        regime: "Vegan",
-        images: [
-            "/assets/images/Vegan1.jpg",
-            "/assets/images/Vegan2.jpg",
-            "/assets/images/Vegan3.jpg"
-        ],
-        entrees: [
-            { nom: "Salade fraîcheur", allergenes: [] },
-            { nom: "Houmous et crudités", allergenes: ["(Sésame)"] }
-        ],
-        plats: [
-            { nom: "Curry de légumes", allergenes: [] },
-            { nom: "Pâtes complètes", allergenes: ["(Gluten)"] }
-        ],
-        desserts: [
-            { nom: "Mousse chocolat vegan", allergenes: [] },
-            { nom: "Tartelette fruits rouges", allergenes: ["(Gluten)"] }
-        ],
-        personnesMin: 2,
-        prix: 55,
-        conditions: "À commander 24h avant.",
-        stock: 15
-    },
-
-    {
-        id: 3,
-        titre: "Menu Événements",
-        description: "Un menu conçu pour vos fêtes et grands rassemblements.",
-        theme: "Événements",
-        regime: "Classique",
-        images: [
-            "/assets/images/event1.jpg",
-            "/assets/images/event2.jpg",
-            "/assets/images/event3.jpg"
-        ],
-        entrees: [
-            { nom: "Mini wraps variés", allergenes: ["(Gluten)"] },
-            { nom: "Verrines saumon avocat", allergenes: ["(Poisson)"] }
-        ],
-        plats: [
-            { nom: "Buffet froid varié", allergenes: ["(Gluten)", "(Lactose)"] },
-            { nom: "Plateau charcuterie", allergenes: [] }
-        ],
-        desserts: [
-            { nom: "Assortiment de mini desserts", allergenes: ["(Gluten)", "(Œufs)", "(Lactose)"] }
-        ],
-        personnesMin: 6,
-        prix: 90,
-        conditions: "À commander 3 jours avant.",
-        stock: 10
-    }
-];
-
 const container = document.getElementById("menus-container");
 
-// ---------------------------------------------------------
+// Récupération des menus depuis la base de données
+let menus = [];
+fetch("../PHP/getMenus.php")
+    .then(res => res.json())
+    .then(data => {
+        menus = data;
+        afficherMenus(menus);
+    })
+    .catch(err => console.error("Erreur fetch menus :", err));
+
+
 // Fonction d'affichage des menus
-// ---------------------------------------------------------
 function afficherMenus(liste) {
     container.innerHTML = "";
 
@@ -161,11 +79,7 @@ function afficherMenus(liste) {
     });
 }
 
-afficherMenus(menus);
-
-// ---------------------------------------------------------
-// 🔥 SYSTÈME GÉNÉRIQUE POUR TOUS LES FILTRES
-// ---------------------------------------------------------
+// SYSTÈME GÉNÉRIQUE POUR TOUS LES FILTRES
 document.querySelector(".filters").addEventListener("click", (e) => {
     const btn = e.target.closest("button");
     if (!btn) return;
@@ -173,10 +87,10 @@ document.querySelector(".filters").addEventListener("click", (e) => {
     const type = btn.dataset.filter;
 
     // On récupère le conteneur vertical du bouton
-    const container = btn.parentElement;
+    const filterBox = btn.parentElement;
 
     // Supprimer un ancien input sous CE bouton
-    const oldInput = container.querySelector(".filter-input");
+    const oldInput = filterBox.querySelector(".filter-input");
     if (oldInput) oldInput.remove();
 
     // Création de l'input
@@ -184,26 +98,22 @@ document.querySelector(".filters").addEventListener("click", (e) => {
     input.classList.add("filter-input");
 
     // On insère l'input DANS le conteneur vertical
-    container.appendChild(input);
+    filterBox.appendChild(input);
 
-    // -----------------------------------------------------
-    // FILTRE : PRIX MAXIMUM
-    // -----------------------------------------------------
+// FILTRE : PRIX MAXIMUM
     if (type === "prix") {
         input.type = "number";
         input.placeholder = "Prix maximum";
 
         input.addEventListener("input", () => {
             const max = Number(input.value);
-            if (!max) return afficherMenus(menus);
+            if (input.value === "") return afficherMenus(menus);
 
             afficherMenus(menus.filter(m => m.prix <= max));
         });
     }
 
-    // -----------------------------------------------------
-    // FILTRE : FOURCHETTE DE PRIX
-    // -----------------------------------------------------
+// FILTRE : FOURCHETTE DE PRIX
     if (type === "prix-range") {
         input.placeholder = "Ex : 40-80";
 
@@ -215,9 +125,7 @@ document.querySelector(".filters").addEventListener("click", (e) => {
         });
     }
 
-    // -----------------------------------------------------
-    // FILTRE : THÈME
-    // -----------------------------------------------------
+// FILTRE : THÈME
     if (type === "theme") {
         input.placeholder = "Ex : Noël, Vegan...";
 
@@ -229,9 +137,7 @@ document.querySelector(".filters").addEventListener("click", (e) => {
         });
     }
 
-    // -----------------------------------------------------
-    // FILTRE : RÉGIME
-    // -----------------------------------------------------
+// FILTRE : RÉGIME
     if (type === "regime") {
         input.placeholder = "Ex : Vegan, Classique...";
 
@@ -243,25 +149,24 @@ document.querySelector(".filters").addEventListener("click", (e) => {
         });
     }
 
-    // -----------------------------------------------------
-    // FILTRE : PERSONNES MINIMUM
-    // -----------------------------------------------------
+// FILTRE : NOMBRE DE PERSONNES
     if (type === "personnes") {
         input.type = "number";
         input.placeholder = "Min. personnes";
 
         input.addEventListener("input", () => {
             const min = Number(input.value);
-            if (!min) return afficherMenus(menus);
+            if (input.value === "") return afficherMenus(menus);
 
             afficherMenus(menus.filter(m => m.personnesMin >= min));
         });
     }
 });
 
-// ---------------------------------------------------------
+
+//  FIN DES FILTRES     ----------------------------
+
 // SLIDER
-// ---------------------------------------------------------
 document.addEventListener("click", (e) => {
     const btn = e.target.closest(".arrow");
     if (!btn) return;
@@ -282,9 +187,7 @@ document.addEventListener("click", (e) => {
     imgElement.dataset.index = newIndex;
 });
 
-// -----------------------------
 // Redirection vers la page détail
-// -----------------------------
 document.addEventListener("click", (e) => {
     const btn = e.target.closest(".btn-details2");
     if (!btn) return;
