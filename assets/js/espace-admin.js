@@ -100,41 +100,6 @@ function afficherPlats() {
     );
 }
 
-// AFFICHAGE HORAIRES
-function afficherHoraires() {
-
-    // Ordre logique des jours pour le tri
-    const ordreJours = [
-        "lundi",
-        "mardi",
-        "mercredi",
-        "jeudi",
-        "vendredi",
-        "samedi",
-        "dimanche"
-    ];
-
-    // Tri des horaires selon l’ordre des jours écrit en Majuscule ou minuscule
-        const horairesTries = [...horaires].sort((a, b) => {
-        const ja = a.jour.toLowerCase();
-        const jb = b.jour.toLowerCase();
-        return ordreJours.indexOf(ja) - ordreJours.indexOf(jb);
-    });
-
-
-    afficherListe(
-        listeHoraires,
-        horairesTries,
-        (h) => `
-            <strong>${h.jour}</strong> : ${h.ouverture} - ${h.fermeture}<br>
-            <button class="btn-modifier-horaire" data-id="${h.id}">Modifier</button>
-            <button class="btn-supprimer-horaire" data-id="${h.id}">Supprimer</button>
-        `,
-        "Aucun horaire enregistré."
-    );
-}
-
-
 // AFFICHAGE COMMANDES
 async function chargerCommandesDepuisServeur() {
     try {
@@ -173,17 +138,18 @@ function afficherCommandes() {
 
         li.innerHTML = `
             <div class="admin-item-info">
-                <strong>Commande #${cmd.id}</strong>
-                <span>Client : ${cmd.client_nom}</span>
-                <span>Menu : ${cmd.menuTitre}</span>
-                <span>Nombre de personnes : ${cmd.nbPersonnes}</span>
-                <span>Prix total : ${cmd.prixTotal} €</span>
-                <span>Prestation : ${cmd.datePrestation.split('-').reverse().join('-')} à ${cmd.heurePrestation}</span>
-                <span>Adresse : ${cmd.adresse}, ${cmd.cp}, ${cmd.ville}</span>
-                <span>Téléphone : ${cmd.gsm}</span>
-                <span>Statut actuel : <strong>${cmd.statut}</strong></span>
-                ${cmd.materiel ? '<span style="color:red;">⚠️ Matériel en prêt</span>' : ''}
+                    <strong>Commande #${cmd.id}</strong>
+                    <span>Client : ${cmd.client_nom}</span>
+                    <span>Menu : ${cmd.menuTitre}</span>
+                    <span>Nombre de personnes : ${cmd.nbPersonnes}</span>
+                    <span>Prix total : ${cmd.prixTotal} €</span>
+                    <span>Prestation : ${cmd.datePrestation.split('-').reverse().join('-')} à ${cmd.heurePrestation}</span>
+                    <span>Adresse : ${cmd.adresse}, ${cmd.cp}, ${cmd.ville}</span>
+                    <span>Téléphone : ${cmd.gsm}</span>
+                    <span class="statut-ligne">Statut actuel : <strong>${cmd.statut}</strong></span>
+                    ${cmd.materiel ? '<span style="color:red;">⚠️ Matériel en prêt</span>' : ''}
             </div>
+
 
             <div class="admin-actions">
                 <select class="select-statut" data-id="${cmd.id}">
@@ -204,7 +170,6 @@ function afficherCommandes() {
     });
 }
 
-
 // AFFICHAGE AVIS
 function afficherAvis() {
     const avisEnAttente = avis.filter(a => a.statut === "en attente");
@@ -222,11 +187,45 @@ function afficherAvis() {
     );
 }
 
-// ÉCOUTEURS D'ÉVÉNEMENTS
+// AFFICHAGE HORAIRES
+function afficherHoraires() {
+
+    // Ordre logique des jours pour le tri
+    const ordreJours = [
+        "lundi",
+        "mardi",
+        "mercredi",
+        "jeudi",
+        "vendredi",
+        "samedi",
+        "dimanche"
+    ];
+
+    // Tri des horaires selon l’ordre des jours écrit en Majuscule ou minuscule
+    const horairesTries = [...horaires].sort((a, b) => {
+        const ja = a.jour.toLowerCase();
+        const jb = b.jour.toLowerCase();
+        return ordreJours.indexOf(ja) - ordreJours.indexOf(jb);
+    });
+
+
+    afficherListe(
+        listeHoraires,
+        horairesTries,
+        (h) => `
+            <strong>${h.jour}</strong> : ${h.ouverture} - ${h.fermeture}<br>
+            <button class="btn-modifier-horaire" data-id="${h.id}">Modifier</button>
+            <button class="btn-supprimer-horaire" data-id="${h.id}">Supprimer</button>
+        `,
+        "Aucun horaire enregistré."
+    );
+}
+
+// ÉCOUTEURS D'ÉVÉNEMENTS   les boutons
 document.addEventListener("click", (e) => {
     const id = e.target.dataset.id;
 
-    // EMPLOYÉS
+    // 1 - EMPLOYÉS
     if (e.target.classList.contains("btn-suspend")) {
         fetch("../PHP/suspendEmploye.php", {
             method: "POST",
@@ -249,7 +248,7 @@ document.addEventListener("click", (e) => {
         }
     }
 
-    // MENUS
+    // 2 -MENUS
     if (e.target.classList.contains("btn-supprimer-menu")) {
         if (supprimerElement(menus, (newData) => { menus = newData; }, id, "Supprimer ce menu ?")) {
             saveToLocalStorage("menus", menus);
@@ -273,7 +272,7 @@ document.addEventListener("click", (e) => {
         afficherMenus();
     }
 
-    // PLATS
+    // 3 - PLATS
     if (e.target.classList.contains("btn-supprimer-plat")) {
         if (supprimerElement(plats, (newData) => { plats = newData; }, id, "Supprimer ce plat ?")) {
             saveToLocalStorage("plats", plats);
@@ -295,7 +294,50 @@ document.addEventListener("click", (e) => {
         afficherPlats();
     }
 
-    // HORAIRES
+    // 4 - COMMANDES
+    if (e.target.classList.contains("btn-annuler")) {
+        const commande = commandes.find(cmd => cmd.id === id);
+        if (!commande) return;
+
+        // On garde tes prompts EXACTEMENT comme tu les veux
+        const contact = prompt("Mode de contact utilisé pour prévenir le client (appel ou mail) :");
+        const motif = prompt("Motif de l'annulation :");
+
+        if (!contact || !motif) {
+            alert("Annulation annulée : tous les champs sont obligatoires.");
+            return;
+        }
+
+        // On envoie au backend pour mettre à jour la commande en BDD
+        fetch("../PHP/annulerCommande.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id, contact, motif })
+        })
+            .then(r => r.json())
+            .then(result => {
+                if (result.success) {
+                    alert("Commande annulée avec succès !");
+                    chargerCommandesDepuisServeur(); // recharge depuis MySQL
+                } else {
+                    alert("Erreur : " + result.message);
+                }
+            });
+    }
+
+    // 5 - AVIS
+    if (e.target.classList.contains("btn-valider-avis")) {
+        avis = avis.map(a => a.id === id ? { ...a, statut: "validé" } : a);
+        saveToLocalStorage("avis", avis);
+        afficherAvis();
+    }
+    if (e.target.classList.contains("btn-refuser-avis")) {
+        avis = avis.filter(a => a.id !== id);
+        saveToLocalStorage("avis", avis);
+        afficherAvis();
+    }
+
+    // 6 - HORAIRES
     if (e.target.classList.contains("btn-supprimer-horaire")) {
 
         const id = e.target.dataset.id; // ← Récupération de l'ID
@@ -335,93 +377,10 @@ document.addEventListener("click", (e) => {
             .then(r => r.json())
             .then(() => chargerHorairesDepuisServeur());
     }
-
-
-
-    // COMMANDES
-    if (e.target.classList.contains("btn-annuler")) {
-        const commande = commandes.find(cmd => cmd.id === id);
-        if (!commande) return;
-
-        // On garde tes prompts EXACTEMENT comme tu les veux
-        const contact = prompt("Mode de contact utilisé pour prévenir le client (appel ou mail) :");
-        const motif = prompt("Motif de l'annulation :");
-
-        if (!contact || !motif) {
-            alert("Annulation annulée : tous les champs sont obligatoires.");
-            return;
-        }
-
-        // On envoie au backend pour mettre à jour la commande en BDD
-        fetch("../PHP/annulerCommande.php", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ id, contact, motif })
-        })
-            .then(r => r.json())
-            .then(result => {
-                if (result.success) {
-                    alert("Commande annulée avec succès !");
-                    chargerCommandesDepuisServeur(); // recharge depuis MySQL
-                } else {
-                    alert("Erreur : " + result.message);
-                }
-            });
-    }
-
-    // AVIS
-    if (e.target.classList.contains("btn-valider-avis")) {
-        avis = avis.map(a => a.id === id ? { ...a, statut: "validé" } : a);
-        saveToLocalStorage("avis", avis);
-        afficherAvis();
-    }
-    if (e.target.classList.contains("btn-refuser-avis")) {
-        avis = avis.filter(a => a.id !== id);
-        saveToLocalStorage("avis", avis);
-        afficherAvis();
-    }
 });
 
-// CHANGEMENT DE STATUT COMMANDE
-document.addEventListener("change", (e) => {
-    if (e.target.classList.contains("select-statut")) {
-        const id = e.target.dataset.id;
-        const commande = commandes.find(cmd => cmd.id === id);
-        if (!commande) return;
 
-        const nouveauStatut = e.target.value;
-        if (!nouveauStatut) return;
 
-        // On garde ton comportement EXACT
-        if (nouveauStatut === "en attente du retour de matériel") {
-            alert(`Email envoyé :
-Objet : Retour de matériel
-Bonjour,
-Vous avez 10 jours pour restituer le matériel. Sinon, 600€ de frais seront appliqués.
-Cordialement, L'équipe Vite & Gourmand`);
-        }
-
-        // On envoie la mise à jour au serveur
-        fetch("../PHP/modifierStatutCommande.php", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ id, statut: nouveauStatut })
-        })
-            .then(r => r.json())
-            .then(result => {
-                if (result.success) {
-                    // Recharge depuis MySQL
-                    chargerCommandesDepuisServeur();
-                } else {
-                    alert("Erreur : " + result.message);
-                }
-            });
-    }
-});
-
-// FILTRES COMMANDES
-filtreStatut.addEventListener("change", afficherCommandes);
-filtreClient.addEventListener("input", afficherCommandes);
 
 // CRÉATION EMPLOYÉ
 async function chargerEmployesDepuisServeur() {
@@ -496,6 +455,47 @@ document.getElementById("btn-ajout-plat").addEventListener("click", () => {
     afficherPlats();
     alert("Plat(s) ajouté(s) avec succès !");
 });
+
+// CHANGEMENT DE STATUT COMMANDE
+document.addEventListener("change", (e) => {
+    if (e.target.classList.contains("select-statut")) {
+        const id = e.target.dataset.id;
+        const commande = commandes.find(cmd => cmd.id === id);
+        if (!commande) return;
+
+        const nouveauStatut = e.target.value;
+        if (!nouveauStatut) return;
+
+        // On garde ton comportement EXACT
+        if (nouveauStatut === "en attente du retour de matériel") {
+            alert(`Email envoyé :
+Objet : Retour de matériel
+Bonjour,
+Vous avez 10 jours pour restituer le matériel. Sinon, 600€ de frais seront appliqués.
+Cordialement, L'équipe Vite & Gourmand`);
+        }
+
+        // On envoie la mise à jour au serveur
+        fetch("../PHP/modifierStatutCommande.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id, statut: nouveauStatut })
+        })
+            .then(r => r.json())
+            .then(result => {
+                if (result.success) {
+                    // Recharge depuis MySQL
+                    chargerCommandesDepuisServeur();
+                } else {
+                    alert("Erreur : " + result.message);
+                }
+            });
+    }
+});
+
+// FILTRES COMMANDES
+filtreStatut.addEventListener("change", afficherCommandes);
+filtreClient.addEventListener("input", afficherCommandes);
 
 // CRÉATION HORAIRE
 async function chargerHorairesDepuisServeur() {

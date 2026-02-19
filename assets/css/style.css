@@ -666,11 +666,22 @@ li {
 
 .admin-item-info {
     display: grid;
+    grid-template-columns: 1fr;
+    gap: 4px;
 }
 
 .admin-item-info strong {
     display: block;
     margin-bottom: 5px;
+}
+
+/* Correction du statut */
+.admin-item-info .statut-ligne {
+    white-space: nowrap;
+}
+
+.admin-item-info .statut-ligne strong {
+    display: inline;
 }
 
 
@@ -679,6 +690,7 @@ li {
     display: flex;
     gap: 10px;
 }
+
 
 /* ====== FILTRES ====== */
 .filtres {
