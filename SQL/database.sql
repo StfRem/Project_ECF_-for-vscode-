@@ -139,7 +139,7 @@ INSERT INTO users (id, fullname, email, password, gsm, address, cp, ville, role,
 -- TABLE HORAIRES
 
 CREATE TABLE horaires (
-    id VARCHAR(50) NOT NULL,
+    id INT NOT NULL AUTO_INCREMENT,
     jour VARCHAR(20) NOT NULL,
     ouverture VARCHAR(10) NOT NULL,
     fermeture VARCHAR(10) NOT NULL,
