@@ -102,9 +102,29 @@ function afficherPlats() {
 
 // AFFICHAGE HORAIRES
 function afficherHoraires() {
+
+    // Ordre logique des jours pour le tri
+    const ordreJours = [
+        "lundi",
+        "mardi",
+        "mercredi",
+        "jeudi",
+        "vendredi",
+        "samedi",
+        "dimanche"
+    ];
+
+    // Tri des horaires selon l’ordre des jours écrit en Majuscule ou minuscule
+        const horairesTries = [...horaires].sort((a, b) => {
+        const ja = a.jour.toLowerCase();
+        const jb = b.jour.toLowerCase();
+        return ordreJours.indexOf(ja) - ordreJours.indexOf(jb);
+    });
+
+
     afficherListe(
         listeHoraires,
-        horaires,
+        horairesTries,
         (h) => `
             <strong>${h.jour}</strong> : ${h.ouverture} - ${h.fermeture}<br>
             <button class="btn-modifier-horaire" data-id="${h.id}">Modifier</button>
@@ -113,6 +133,7 @@ function afficherHoraires() {
         "Aucun horaire enregistré."
     );
 }
+
 
 // AFFICHAGE COMMANDES
 async function chargerCommandesDepuisServeur() {
@@ -276,6 +297,9 @@ document.addEventListener("click", (e) => {
 
     // HORAIRES
     if (e.target.classList.contains("btn-supprimer-horaire")) {
+
+        const id = e.target.dataset.id; // ← Récupération de l'ID
+
         if (confirm("Supprimer cet horaire ?")) {
             fetch("../PHP/supprimerHoraire.php", {
                 method: "POST",
@@ -288,8 +312,12 @@ document.addEventListener("click", (e) => {
     }
 
     if (e.target.classList.contains("btn-modifier-horaire")) {
-        const h = horaires.find(h => h.id === id);
+
+        const id = e.target.dataset.id; // ← Récupération de l'ID
+
+        const h = horaires.find(h => h.id == id); // == pour éviter problème de type
         if (!h) return;
+
         const jour = prompt("Jour :", h.jour);
         const ouverture = prompt("Heure d'ouverture :", h.ouverture);
         const fermeture = prompt("Heure de fermeture :", h.fermeture);
@@ -307,6 +335,8 @@ document.addEventListener("click", (e) => {
             .then(r => r.json())
             .then(() => chargerHorairesDepuisServeur());
     }
+
+
 
     // COMMANDES
     if (e.target.classList.contains("btn-annuler")) {
