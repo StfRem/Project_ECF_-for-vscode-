@@ -116,6 +116,8 @@ CREATE TABLE commandes (
 
 -- TABLE USERS
 
+-- TABLE USERS
+
 CREATE TABLE users (
     id VARCHAR(50) NOT NULL,
     fullname VARCHAR(100) NOT NULL,
@@ -124,7 +126,7 @@ CREATE TABLE users (
     gsm VARCHAR(20),
     address TEXT,
     cp VARCHAR(10),
-    ville VARCHAR(255) NOT NULL,
+    ville VARCHAR(255) NULL,
     role ENUM('admin','employe','utilisateur') DEFAULT 'utilisateur',
     suspendu TINYINT(1) DEFAULT 0,
     PRIMARY KEY (id),
@@ -135,7 +137,6 @@ INSERT INTO users (id, fullname, email, password, gsm, address, cp, ville, role,
 ('USR-1770864050506', 'José', 'admin@site.com', '$2y$10$XlrqFb3xv0OoaiINPewVpOgarsWuI8HaLcsL0HyiHoojmYfcx3cKS', '0612234578', 'Bordeaux', '48000', 'Bordeaux', 'admin', 0),
 ('USR-1770916210947', 'Remiatte Stéphane', 'stephaneremiatt54@gmail.com', '$2y$10$KSQ.9x0qYywzGurADa3EzeHam28rsf2V97to8GHkHdhaxEvt/DNRq', '0645788978', '62 Aven foch', '75000', 'Paris', 'utilisateur', 0),
 ('EMP-1770934147611', 'marie ma', 'julie@site.com', '$2y$10$dBq2t2tNgG3xVJB9pxZHH.124.myInF6iC83R070ATP22LWE729vm', NULL, NULL, NULL, 'Nancy', 'employe', 0);
-
 -- TABLE HORAIRES
 
 CREATE TABLE horaires (
