@@ -8,7 +8,6 @@
 html, body{
     background:var(--fond)
 }
-/* ajouté image de fond responsive recadré en mobile
 
 /* POLICE */
 @font-face {
@@ -17,7 +16,7 @@ html, body{
     font-weight: 800;
 }
 
-/* ---------- TAILLES DE POLICE (DESKTOP) ---------- */
+/* TAILLES DE POLICE (DESKTOP) */
 h1 {
     font-size: 32px;
 }
@@ -46,14 +45,11 @@ li {
     --btn: #FFA7A1;
 }
 
-/*--------------------------------------------------------------------------------------------------------------------------------------------*/
+/*----------FIN SETTING PERSONNELLE  -----------------------------------------------------------------------------*/
+
+
 /*------------------  RÉGLAGE DE TOUS LES BOUTONS  ------------------------*/
 
-
-
-
-
-/* ------- BOUTONS ESPACE ADMINISTRATEUR  --------*/
 .btn-primary, 
 .btn-suspend, 
 .btn-supprimer, 
@@ -86,59 +82,13 @@ li {
     font-weight: bold;
 }
 
-
-
-
-
-
-
-
-
-
-
 /*----------------------------------------------FIN RÉGLAGE DES BOUTONS  ---------------------------------------------------------------------------*/
 
 
-/* UL sans puces */
+/* J' enlève les puces UL */
 li {
     list-style: none;
 }
-
-/*---------  FOOTER  ------------------*/
-
-.footer {
-    margin-top: 0px;
-    padding: 5px;
-    background-color: var(--header);
-    font-family: "RobotoBold", sans-serif;
-    color: var(--txt-dark);
-    text-align: center;
-}
-
-/* UL horaires centrées */
-.ul_horaire {
-    padding-left: 0;
-    margin-left: 0;
-    text-align: center;
-}
-
-/* Horaires centrées */
-.ul_horaire li {
-    text-align: center;
-}
-
-/* Mentions légales alignées à gauche */
-.mention {
-    text-align: left;
-    margin-top: 20px;
-}
-.mention a {
-    font-size: 14px;
-    color: var(--txt-dark);
-}
-
-/*-----------------------------------------------------------------------------------------*/
-
 
 /*------------------------------- NAVBAR ------------------------------------------- */
 .nav-header {
@@ -177,8 +127,43 @@ li {
     font-size: 22px;
     font-weight: 500;
 }
+/*-----------------FIN NAVBAR ----------------------------- */
 
 
+/*---------  FOOTER  ------------------*/
+
+.footer {
+    margin-top: 0px;
+    padding: 5px;
+    background-color: var(--header);
+    font-family: "RobotoBold", sans-serif;
+    color: var(--txt-dark);
+    text-align: center;
+}
+
+/* UL horaires centrées */
+.ul_horaire {
+    padding-left: 0;
+    margin-left: 0;
+    text-align: center;
+}
+
+/* Horaires centrées */
+.ul_horaire li {
+    text-align: center;
+}
+
+/* Mentions légales alignées à gauche */
+.mention {
+    text-align: left;
+    margin-top: 20px;
+}
+.mention a {
+    font-size: 14px;
+    color: var(--txt-dark);
+}
+
+/*-----------------------FIN FOOTER ----------------------------------------*/
 
 
 /* --------------------- ACCUEIL HTML----------------------- */
@@ -211,7 +196,7 @@ li {
     p,
     li {
         font-size: 16px;
-        margin-top: 5px; /*aère un peu le texte*/
+        margin-top: 5px;
     }
 
     .mention a {
@@ -262,7 +247,6 @@ li {
 .card {
     width: 300px;
     height: auto;
-    /* Laisse le contenu définir la hauteur */
     background-color: var(--card);
     border-radius: 12px;
     padding: 20px;
@@ -273,7 +257,6 @@ li {
     text-align: center;
 }
 
-
 .card img {
     height: 26px;
 }
@@ -283,10 +266,7 @@ li {
 }
 
 
-
 /* CARD ACCUEIL AVIS MOBILE */
-
-
 @media (max-width: 768px) {
 
     .cards {
@@ -353,7 +333,6 @@ li {
     border-radius: 6px;
 }
 
-
 .filters button {
     background-color: var(--btn);
     border: none;
@@ -365,10 +344,6 @@ li {
     font-size: 1rem;
     /* 16px */
 }
-
-
-
-
 
 /*FILTRES MOBILE */
 @media (max-width: 768px) {
@@ -491,7 +466,7 @@ li {
         height: 40px;
     }
 }
-
+/* CARDS MENUS GLOBAL MENU.HTML RESPONSIVE */
 @media (max-width: 475px) {
 
     .menu-card {
@@ -504,14 +479,7 @@ li {
     }
 }
 
-
-/*----------------------------------------------------------------*-
-
-
-
-
-
-/*-------------------------------------  PAGE COMMANDE  --------------------------------- */
+/*---------------------  PAGE COMMANDE  --------------------------------- */
 /* Centrage du container*/
 .commande-container {
     display: flex;
@@ -543,8 +511,6 @@ li {
     margin-bottom: 20px;
     color: var(--txt-dark);
 }
-
-
 
 
 /* -----------------PAGE REGISTER  ------------------------------- */
