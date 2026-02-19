@@ -1,4 +1,3 @@
-// Données des menus (identiques à menus.js et menu-detail.js)
 const menus = [
     {
         id: 1,
