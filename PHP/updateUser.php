@@ -2,9 +2,11 @@
 header("Content-Type: application/json");
 require_once "Database.php";
 
-file_put_contents("debug_user.txt", print_r($data, true)); // Debug: log the received data
-
+// Récupération des données envoyées par le JS
 $data = json_decode(file_get_contents("php://input"), true);
+
+// Debug
+file_put_contents("debug_user.txt", print_r($data, true));
 
 $id = $data["id"];
 $fullname = $data["fullname"];
