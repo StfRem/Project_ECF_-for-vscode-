@@ -10,7 +10,7 @@ if (!user || user.role !== "admin") {
 }
 
 // DONNÉES
-let commandes = getFromLocalStorage("commandes");
+let commandes = [];
 let avis = getFromLocalStorage("avis");
 let users = getFromLocalStorage("users");
 let menus = getFromLocalStorage("menus");
@@ -115,25 +115,43 @@ function afficherHoraires() {
 }
 
 // AFFICHAGE COMMANDES
+async function chargerCommandesDepuisServeur() {
+    try {
+        const response = await fetch("../PHP/getCommandesAdmin.php");
+        const result = await response.json();
+
+        if (result.status === "success") {
+            commandes = result.data;   // Mise à jour de la variable globale
+            afficherCommandes();       // On lance l'affichage une fois les données reçues
+        } else {
+            console.error("Erreur chargement commandes :", result.message);
+        }
+    } catch (error) {
+        console.error("Erreur réseau :", error);
+    }
+}
 function afficherCommandes() {
     const recherche = filtreClient.value.toLowerCase();
     const statutFiltre = filtreStatut.value;
+
     const commandesFiltrees = commandes.filter(cmd => {
-        const client = users.find(u => u.id === cmd.userId);
         const matchStatut = statutFiltre === "" || cmd.statut === statutFiltre;
-        const matchNom = client ? client.fullname.toLowerCase().includes(recherche) : false;
+        const matchNom = cmd.client_nom.toLowerCase().includes(recherche);
         return matchStatut && matchNom;
     });
 
-    listeCommandes.innerHTML = commandesFiltrees.length === 0 ? "<p>Aucune commande trouvée.</p>" : "";
+    listeCommandes.innerHTML = commandesFiltrees.length === 0
+        ? "<p>Aucune commande trouvée.</p>"
+        : "";
+
     commandesFiltrees.forEach(cmd => {
-        const client = users.find(u => u.id === cmd.userId);
         const li = document.createElement("li");
         li.classList.add("admin-item");
+
         li.innerHTML = `
             <div class="admin-item-info">
                 <strong>Commande #${cmd.id}</strong>
-                <span>Client : ${client ? client.fullname : "Inconnu"}</span>
+                <span>Client : ${cmd.client_nom}</span>
                 <span>Menu : ${cmd.menuTitre}</span>
                 <span>Nombre de personnes : ${cmd.nbPersonnes}</span>
                 <span>Prix total : ${cmd.prixTotal} €</span>
@@ -143,6 +161,7 @@ function afficherCommandes() {
                 <span>Statut actuel : <strong>${cmd.statut}</strong></span>
                 ${cmd.materiel ? '<span style="color:red;">⚠️ Matériel en prêt</span>' : ''}
             </div>
+
             <div class="admin-actions">
                 <select class="select-statut" data-id="${cmd.id}">
                     <option value="">Changer statut</option>
@@ -153,12 +172,16 @@ function afficherCommandes() {
                     <option value="terminée">Terminée</option>
                     ${cmd.materiel ? '<option value="en attente du retour de matériel">Retour matériel</option>' : ''}
                 </select>
+
                 <button class="btn-danger btn-annuler" data-id="${cmd.id}">Annuler</button>
             </div>
         `;
+
         listeCommandes.appendChild(li);
     });
 }
+
+
 // AFFICHAGE AVIS
 function afficherAvis() {
     const avisEnAttente = avis.filter(a => a.statut === "en attente");
@@ -187,8 +210,8 @@ document.addEventListener("click", (e) => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ id })
         })
-        .then(r => r.json())
-        .then(() => chargerEmployesDepuisServeur());
+            .then(r => r.json())
+            .then(() => chargerEmployesDepuisServeur());
     }
 
     if (e.target.classList.contains("btn-supprimer")) {
@@ -198,8 +221,8 @@ document.addEventListener("click", (e) => {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ id })
             })
-            .then(r => r.json())
-            .then(() => chargerEmployesDepuisServeur());
+                .then(r => r.json())
+                .then(() => chargerEmployesDepuisServeur());
         }
     }
 
@@ -257,8 +280,8 @@ document.addEventListener("click", (e) => {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ id })
             })
-            .then(r => r.json())
-            .then(() => chargerHorairesDepuisServeur());
+                .then(r => r.json())
+                .then(() => chargerHorairesDepuisServeur());
         }
     }
 
@@ -279,29 +302,39 @@ document.addEventListener("click", (e) => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ id, jour, ouverture, fermeture })
         })
-        .then(r => r.json())
-        .then(() => chargerHorairesDepuisServeur());
+            .then(r => r.json())
+            .then(() => chargerHorairesDepuisServeur());
     }
 
     // COMMANDES
     if (e.target.classList.contains("btn-annuler")) {
         const commande = commandes.find(cmd => cmd.id === id);
         if (!commande) return;
-        const contact = prompt("Mode de contact utilisé pour prévenir le client (appel, mail...) :");
+
+        // On garde tes prompts EXACTEMENT comme tu les veux
+        const contact = prompt("Mode de contact utilisé pour prévenir le client (appel ou mail) :");
         const motif = prompt("Motif de l'annulation :");
+
         if (!contact || !motif) {
             alert("Annulation annulée : tous les champs sont obligatoires.");
             return;
         }
-        commande.historique = commande.historique || [];
-        commande.historique.push({
-            date: new Date().toISOString(),
-            action: `Commande annulée (${contact}) : ${motif}`
-        });
-        commande.statut = "annulée";
-        saveToLocalStorage("commandes", commandes);
-        afficherCommandes();
-        alert("Commande annulée avec succès !");
+
+        // On envoie au backend pour mettre à jour la commande en BDD
+        fetch("../PHP/annulerCommande.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id, contact, motif })
+        })
+            .then(r => r.json())
+            .then(result => {
+                if (result.success) {
+                    alert("Commande annulée avec succès !");
+                    chargerCommandesDepuisServeur(); // recharge depuis MySQL
+                } else {
+                    alert("Erreur : " + result.message);
+                }
+            });
     }
 
     // AVIS
@@ -323,9 +356,11 @@ document.addEventListener("change", (e) => {
         const id = e.target.dataset.id;
         const commande = commandes.find(cmd => cmd.id === id);
         if (!commande) return;
+
         const nouveauStatut = e.target.value;
         if (!nouveauStatut) return;
-        commande.statut = nouveauStatut;
+
+        // On garde ton comportement EXACT
         if (nouveauStatut === "en attente du retour de matériel") {
             alert(`Email envoyé :
 Objet : Retour de matériel
@@ -333,8 +368,22 @@ Bonjour,
 Vous avez 10 jours pour restituer le matériel. Sinon, 600€ de frais seront appliqués.
 Cordialement, L'équipe Vite & Gourmand`);
         }
-        saveToLocalStorage("commandes", commandes);
-        afficherCommandes();
+
+        // On envoie la mise à jour au serveur
+        fetch("../PHP/modifierStatutCommande.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id, statut: nouveauStatut })
+        })
+            .then(r => r.json())
+            .then(result => {
+                if (result.success) {
+                    // Recharge depuis MySQL
+                    chargerCommandesDepuisServeur();
+                } else {
+                    alert("Erreur : " + result.message);
+                }
+            });
     }
 });
 
@@ -459,5 +508,5 @@ chargerEmployesDepuisServeur();
 afficherMenus();
 afficherPlats();
 chargerHorairesDepuisServeur();
-afficherCommandes();
+chargerCommandesDepuisServeur();
 afficherAvis();
