@@ -15,7 +15,7 @@ let avis = getFromLocalStorage("avis");
 let users = getFromLocalStorage("users");
 let menus = getFromLocalStorage("menus");
 let plats = getFromLocalStorage("plats");
-let horaires = getFromLocalStorage("horaires");
+let horaires = [];
 
 // SÉLECTEURS
 const listeEmployes = document.getElementById("liste-employes");
@@ -159,7 +159,6 @@ function afficherCommandes() {
         listeCommandes.appendChild(li);
     });
 }
-
 // AFFICHAGE AVIS
 function afficherAvis() {
     const avisEnAttente = avis.filter(a => a.statut === "en attente");
@@ -183,17 +182,7 @@ document.addEventListener("click", (e) => {
 
     // EMPLOYÉS
     if (e.target.classList.contains("btn-suspend")) {
-    fetch("../PHP/suspendEmploye.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id })
-    })
-    .then(r => r.json())
-    .then(() => chargerEmployesDepuisServeur());
-}
-    if (e.target.classList.contains("btn-supprimer")) {
-    if (confirm("Supprimer cet employé ?")) {
-        fetch("../PHP/supprimerEmploye.php", {
+        fetch("../PHP/suspendEmploye.php", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ id })
@@ -201,7 +190,18 @@ document.addEventListener("click", (e) => {
         .then(r => r.json())
         .then(() => chargerEmployesDepuisServeur());
     }
-}
+
+    if (e.target.classList.contains("btn-supprimer")) {
+        if (confirm("Supprimer cet employé ?")) {
+            fetch("../PHP/supprimerEmploye.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id })
+            })
+            .then(r => r.json())
+            .then(() => chargerEmployesDepuisServeur());
+        }
+    }
 
     // MENUS
     if (e.target.classList.contains("btn-supprimer-menu")) {
@@ -251,26 +251,36 @@ document.addEventListener("click", (e) => {
 
     // HORAIRES
     if (e.target.classList.contains("btn-supprimer-horaire")) {
-        if (supprimerElement(horaires, (newData) => { horaires = newData; }, id, "Supprimer cet horaire ?")) {
-            saveToLocalStorage("horaires", horaires);
-            afficherHoraires();
+        if (confirm("Supprimer cet horaire ?")) {
+            fetch("../PHP/supprimerHoraire.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id })
+            })
+            .then(r => r.json())
+            .then(() => chargerHorairesDepuisServeur());
         }
     }
+
     if (e.target.classList.contains("btn-modifier-horaire")) {
         const h = horaires.find(h => h.id === id);
         if (!h) return;
         const jour = prompt("Jour :", h.jour);
         const ouverture = prompt("Heure d'ouverture :", h.ouverture);
         const fermeture = prompt("Heure de fermeture :", h.fermeture);
+
         if (!jour || !ouverture || !fermeture) {
             alert("Tous les champs sont obligatoires.");
             return;
         }
-        h.jour = jour;
-        h.ouverture = ouverture;
-        h.fermeture = fermeture;
-        saveToLocalStorage("horaires", horaires);
-        afficherHoraires();
+
+        fetch("../PHP/modifierHoraire.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id, jour, ouverture, fermeture })
+        })
+        .then(r => r.json())
+        .then(() => chargerHorairesDepuisServeur());
     }
 
     // COMMANDES
@@ -338,6 +348,7 @@ async function chargerEmployesDepuisServeur() {
     users = await response.json();
     afficherEmployes();
 }
+
 document.getElementById("btn-ajout-employe").addEventListener("click", async () => {
     const fullname = prompt("Nom et Prénom de l'employé :");
     const email = prompt("Email de l'employé :");
@@ -348,27 +359,20 @@ document.getElementById("btn-ajout-employe").addEventListener("click", async () 
         return;
     }
 
-    // Envoi au backend PHP
     const response = await fetch("../PHP/ajoutEmploye.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            fullname,
-            email,
-            password
-        })
+        body: JSON.stringify({ fullname, email, password })
     });
 
     const result = await response.json();
-
     if (result.success) {
         alert("Employé créé avec succès !");
-        chargerEmployesDepuisServeur(); // On recharge depuis MySQL
+        chargerEmployesDepuisServeur();
     } else {
         alert("Erreur : " + result.message);
     }
 });
-
 
 // CRÉATION MENU
 document.getElementById("btn-ajout-menu").addEventListener("click", () => {
@@ -413,28 +417,47 @@ document.getElementById("btn-ajout-plat").addEventListener("click", () => {
 });
 
 // CRÉATION HORAIRE
-document.getElementById("btn-ajout-horaire").addEventListener("click", () => {
+async function chargerHorairesDepuisServeur() {
+    const response = await fetch("../PHP/get_horaires.php");
+    const result = await response.json();
+
+    if (result.status === "success") {
+        horaires = result.data;   // <-- LA LIGNE IMPORTANTE
+        afficherHoraires();
+    } else {
+        console.error("Erreur chargement horaires :", result.message);
+    }
+}
+
+document.getElementById("btn-ajout-horaire").addEventListener("click", async () => {
     const jour = prompt("Jour (ex : Lundi) :");
     const ouverture = prompt("Heure d'ouverture (ex : 09:00) :");
     const fermeture = prompt("Heure de fermeture (ex : 18:00) :");
+
     if (!jour || !ouverture || !fermeture) {
         alert("Tous les champs sont obligatoires.");
         return;
     }
-    horaires.push({
-        id: "HORAIRE-" + Date.now(),
-        jour,
-        ouverture,
-        fermeture
+
+    const response = await fetch("../PHP/ajoutHoraire.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ jour, ouverture, fermeture })
     });
-    saveToLocalStorage("horaires", horaires);
-    afficherHoraires();
+
+    const result = await response.json();
+    if (result.success) {
+        alert("Horaire ajouté !");
+        chargerHorairesDepuisServeur();
+    } else {
+        alert("Erreur : " + result.message);
+    }
 });
 
 // AFFICHAGE INITIAL
 chargerEmployesDepuisServeur();
 afficherMenus();
 afficherPlats();
-afficherHoraires();
+chargerHorairesDepuisServeur();
 afficherCommandes();
 afficherAvis();
