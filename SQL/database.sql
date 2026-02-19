@@ -114,7 +114,6 @@ CREATE TABLE commandes (
     avis JSON
 );
 
--- TABLE USERS
 
 -- TABLE USERS
 
