@@ -8,7 +8,7 @@ form.addEventListener("submit", (e) => {
     const passwordSaisi = document.getElementById("password").value.trim();
 
     // ENVOI AU SERVEUR (WAMP / PHP)
-    fetch('./php/login.php', {
+    fetch('../PHP/login.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
