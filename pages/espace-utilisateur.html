@@ -20,12 +20,26 @@
     <section class="admin-section">
         <h2>Mes Informations Personnelles</h2>
         <form id="profile-form">
-            <label>Nom Prénom</label><input type="text" id="edit-fullname">
-            <label>GSM</label><input type="text" id="edit-gsm">
-            <label>Adresse</label><input type="text" id="edit-address">
+
+            <label>Nom Prénom</label>
+            <input type="text" id="edit-fullname">
+
+            <label>GSM</label>
+            <input type="text" id="edit-gsm">
+
+            <label>Adresse (Rue uniquement)</label>
+            <input type="text" id="edit-address" placeholder="Numéro et nom de rue">
+
+            <label>Code postal</label>
+            <input type="text" id="edit-cp">
+
+            <label>Ville</label>
+            <input type="text" id="edit-ville">
+
             <button type="submit" class="btn-primary">Mettre à jour mon profil</button>
         </form>
     </section>
+
     <main class="user-container">
         <h1>Mes commandes</h1>
         <!-- Liste des commandes -->
