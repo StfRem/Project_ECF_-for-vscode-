@@ -9,7 +9,9 @@ $userId = $data["userId"];
 $nb = $data["nbPersonnes"];
 $date = $data["datePrestation"];
 $heure = $data["heurePrestation"];
-$adresse = $data["adresse"];
+$adresse = $data["adresse"];   // correction : adresse
+$cp = $data["cp"];
+$ville = $data["ville"];
 $distance = $data["distance"];
 
 // 1. Récupérer la commande
@@ -34,7 +36,7 @@ if (!$menu) {
     exit;
 }
 
-// 3. Recalcul du prix
+// 3. Recalculé le prix
 $prixBase = $menu["prix"];
 $personnesMin = $menu["personnesMin"];
 
@@ -45,14 +47,18 @@ if ($nb >= $personnesMin + 5) {
 }
 
 $fraisLivraison = 5;
-if (strtolower($cmd["ville"]) !== "bordeaux") {
+if (strtolower($ville) !== "bordeaux") {
     $fraisLivraison += $distance * 0.59;
 }
 
 $total += $fraisLivraison;
 
 // 4. Mise à jour historique
-$historique = json_decode($cmd["historique"], true);
+$historique = json_decode($cmd["historique"] ?? "[]", true);
+if (!is_array($historique)) {
+    $historique = [];
+}
+
 $historique[] = [
     "date" => date("c"),
     "action" => "Commande modifiée par l'utilisateur"
@@ -64,7 +70,9 @@ $sqlUpdate = "UPDATE commandes SET
     prixTotal = ?, 
     datePrestation = ?, 
     heurePrestation = ?, 
-    adresse = ?, 
+    adresse = ?,
+    cp = ?, 
+    ville = ?, 
     distance = ?, 
     historique = ?
     WHERE id = ? AND userId = ?";
@@ -76,6 +84,8 @@ $stmtUpdate->execute([
     $date,
     $heure,
     $adresse,
+    $cp,
+    $ville,
     $distance,
     json_encode($historique),
     $commandeId,

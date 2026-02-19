@@ -18,7 +18,7 @@ function chargerCommandes() {
         });
 }
 
-// 3. Affichage des commandes
+// 3. Affichage des commandes utilisateur
 function afficherCommandes(commandes) {
     liste.innerHTML = "";
 
@@ -59,7 +59,9 @@ function afficherCommandes(commandes) {
                 <p><strong>Prix total :</strong> ${Number(cmd.prixTotal).toFixed(2)} €</p>
                 <p><strong>Date de prestation :</strong> ${cmd.datePrestation || ""}</p>
                 <p><strong>Heure :</strong> ${cmd.heurePrestation || ""}</p>
-                <p><strong>Adresse :</strong> ${cmd.adresse || ""}, ${cmd.cp || ""} ${cmd.ville || ""}</p>
+                <p><strong>Adresse :</strong> ${cmd.adresse || ""}</p>
+                <p><strong>Code postal :</strong> ${cmd.cp || ""}</p>
+                <p><strong>Ville :</strong> ${cmd.ville || ""}</p>
                 <p><strong>Distance :</strong> ${cmd.distance ?? ""} km</p>
                 <p><strong>Statut :</strong> 
                     <span class="statut-${(cmd.statut || "").replace(/ /g, '-')}">
@@ -117,40 +119,58 @@ document.addEventListener("click", async (e) => {
     }
 
 // --- AFFICHER FORMULAIRE MODIFICATION ---
-    if (target.classList.contains("btn-modifier")) {
-        const id = target.dataset.id;
-        const zone = document.getElementById(`zone-modification-${id}`);
-        if (!zone) return;
+if (target.classList.contains("btn-modifier")) {
+    const id = target.dataset.id;
+    const zone = document.getElementById(`zone-modification-${id}`);
+    if (!zone) return;
 
-        const li = target.closest(".commande-item");
-        const details = li.querySelector(".commande-details");
+    const li = target.closest(".commande-item");
+    const details = li.querySelector(".commande-details");
 
-        const nb = details.querySelector("p:nth-of-type(2)").textContent.replace(/\D+/g, "");
-        const date = details.querySelector("p:nth-of-type(4)").textContent.split(":").slice(1).join(":").trim();
-        const heure = details.querySelector("p:nth-of-type(5)").textContent.split(":").slice(1).join(":").trim();
-        const adresseTexte = details.querySelector("p:nth-of-type(6)").textContent.replace("Adresse :", "").trim();
-        const distance = details.querySelector("p:nth-of-type(7)").textContent.replace(/\D+/g, "");
+    const nb = details.querySelector("p:nth-of-type(2)").textContent.replace(/\D+/g, "");
+    const date = details.querySelector("p:nth-of-type(4)").textContent.split(":").slice(1).join(":").trim();
+    const heure = details.querySelector("p:nth-of-type(5)").textContent.split(":").slice(1).join(":").trim();
 
-        zone.innerHTML = `
-            <div class="formulaire-modification">
-                <h4>Modifier la commande</h4>
-                <label>Nombre de personnes :</label>
-                <input type="number" id="mod-nb-${id}" value="${nb}" min="1">
-                <label>Date :</label>
-                <input type="date" id="mod-date-${id}" value="${date}">
-                <label>Heure :</label>
-                <input type="time" id="mod-heure-${id}" value="${heure}">
-                <label>Adresse complète :</label>
-                <input type="text" id="mod-adresse-${id}" value="${adresseTexte}">
-                <label>Distance (km) :</label>
-                <input type="number" id="mod-distance-${id}" value="${distance}" min="0">
-                <br>
-                <button class="btn-valider-modif btn-action" data-id="${id}">Valider</button>
-                <button class="btn-annuler-modif btn-secondary" data-id="${id}">Annuler les modifications</button>
-            </div>
-        `;
-        return;
-    }
+    // 🔥 Correction : on enlève "Adresse :" et non "Rue :"
+    const adresse = details.querySelector("p:nth-of-type(6)").textContent.replace("Adresse :", "").trim();
+    const cp = details.querySelector("p:nth-of-type(7)").textContent.replace("Code postal :", "").trim();
+    const ville = details.querySelector("p:nth-of-type(8)").textContent.replace("Ville :", "").trim();
+
+    const distance = details.querySelector("p:nth-of-type(9)").textContent.replace(/\D+/g, "");
+
+    zone.innerHTML = `
+        <div class="formulaire-modification">
+            <h4>Modifier la commande</h4>
+
+            <label>Nombre de personnes :</label>
+            <input type="number" id="mod-nb-${id}" value="${nb}" min="1">
+
+            <label>Date :</label>
+            <input type="date" id="mod-date-${id}" value="${date}">
+
+            <label>Heure :</label>
+            <input type="time" id="mod-heure-${id}" value="${heure}">
+
+            <label>Adresse :</label>
+            <input type="text" id="mod-adresse-${id}" value="${adresse}">
+
+            <label>Code postal :</label>
+            <input type="text" id="mod-cp-${id}" value="${cp}">
+
+            <label>Ville :</label>
+            <input type="text" id="mod-ville-${id}" value="${ville}">
+
+            <label>Distance (km) :</label>
+            <input type="number" id="mod-distance-${id}" value="${distance}" min="0">
+
+            <br>
+            <button class="btn-valider-modif btn-action" data-id="${id}">Valider</button>
+            <button class="btn-annuler-modif btn-secondary" data-id="${id}">Annuler les modifications</button>
+        </div>
+    `;
+    return;
+}
+
 
 // --- FERMER FORMULAIRE ---
     if (target.classList.contains("btn-annuler-modif")) {
@@ -161,51 +181,59 @@ document.addEventListener("click", async (e) => {
     }
 
 // --- VALIDER MODIFICATION ---
-    if (target.classList.contains("btn-valider-modif")) {
-        const id = target.dataset.id;
+if (target.classList.contains("btn-valider-modif")) {
+    const id = target.dataset.id;
 
-        const nb = Number(document.getElementById(`mod-nb-${id}`).value);
-        const date = document.getElementById(`mod-date-${id}`).value;
-        const heure = document.getElementById(`mod-heure-${id}`).value;
-        const adresse = document.getElementById(`mod-adresse-${id}`).value;
-        const distance = Number(document.getElementById(`mod-distance-${id}`).value);
+    const nb = Number(document.getElementById(`mod-nb-${id}`).value);
+    const date = document.getElementById(`mod-date-${id}`).value;
+    const heure = document.getElementById(`mod-heure-${id}`).value;
 
-        if (!nb || !date || !heure || !adresse) {
-            alert("Merci de remplir tous les champs.");
+    const adresse = document.getElementById(`mod-adresse-${id}`).value;
+    const cp = document.getElementById(`mod-cp-${id}`).value;
+    const ville = document.getElementById(`mod-ville-${id}`).value;
+
+    const distance = Number(document.getElementById(`mod-distance-${id}`).value);
+
+    if (!nb || !date || !heure || !adresse || !cp || !ville) {
+        alert("Merci de remplir tous les champs.");
+        return;
+    }
+
+    try {
+        const res = await fetch("../PHP/updateCommande.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                commandeId: id,
+                userId: user.id,
+                nbPersonnes: nb,
+                datePrestation: date,
+                heurePrestation: heure,
+                adresse,
+                cp,
+                ville,
+                distance
+            })
+        });
+
+        const data = await res.json();
+
+        if (!data.success) {
+            alert(data.message || "Erreur lors de la mise à jour.");
             return;
         }
 
-        try {
-            const res = await fetch("../PHP/updateCommande.php", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    commandeId: id,
-                    userId: user.id,
-                    nbPersonnes: nb,
-                    datePrestation: date,
-                    heurePrestation: heure,
-                    adresse,
-                    distance
-                })
-            });
+        alert("Commande mise à jour avec succès.");
+        chargerCommandes();
 
-            const data = await res.json();
-
-            if (!data.success) {
-                alert(data.message || "Erreur lors de la mise à jour.");
-                return;
-            }
-
-            alert("Commande mise à jour avec succès.");
-            chargerCommandes();
-
-        } catch (err) {
-            console.error(err);
-            alert("Erreur technique lors de la mise à jour.");
-        }
-        return;
+    } catch (err) {
+        console.error(err);
+        alert("Erreur technique lors de la mise à jour.");
     }
+    return;
+}
+
+
 
 // --- DONNER UN AVIS ---
     if (target.classList.contains("btn-avis")) {
@@ -262,6 +290,9 @@ if (profileForm) {
     document.getElementById("edit-fullname").value = user.fullname || "";
     document.getElementById("edit-gsm").value = user.gsm || "";
     document.getElementById("edit-address").value = user.address || "";
+    document.getElementById("edit-cp").value = user.cp || "";
+    document.getElementById("edit-ville").value = user.ville || "";
+
 
     profileForm.addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -269,6 +300,8 @@ if (profileForm) {
         const fullname = document.getElementById("edit-fullname").value;
         const gsm = document.getElementById("edit-gsm").value;
         const address = document.getElementById("edit-address").value;
+        const ville = document.getElementById("edit-ville").value;
+
 
         try {
             const res = await fetch("../PHP/updateUser.php", {
@@ -278,7 +311,9 @@ if (profileForm) {
                     id: user.id,
                     fullname,
                     gsm,
-                    address
+                    address,
+                    cp,
+                    ville
                 })
             });
 
@@ -292,6 +327,9 @@ if (profileForm) {
             user.fullname = fullname;
             user.gsm = gsm;
             user.address = address;
+            user.cp = cp;
+            user.ville = ville;
+
             localStorage.setItem("user", JSON.stringify(user));
 
             alert("Profil mis à jour !");
