@@ -183,16 +183,25 @@ document.addEventListener("click", (e) => {
 
     // EMPLOYÉS
     if (e.target.classList.contains("btn-suspend")) {
-        users = users.map(u => u.id === id ? {...u, suspendu: !u.suspendu} : u);
-        saveToLocalStorage("users", users);
-        afficherEmployes();
-    }
+    fetch("../PHP/suspendEmploye.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id })
+    })
+    .then(r => r.json())
+    .then(() => chargerEmployesDepuisServeur());
+}
     if (e.target.classList.contains("btn-supprimer")) {
-        if (supprimerElement(users, (newData) => { users = newData; }, id, "Supprimer cet employé ?")) {
-            saveToLocalStorage("users", users);
-            afficherEmployes();
-        }
+    if (confirm("Supprimer cet employé ?")) {
+        fetch("../PHP/supprimerEmploye.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id })
+        })
+        .then(r => r.json())
+        .then(() => chargerEmployesDepuisServeur());
     }
+}
 
     // MENUS
     if (e.target.classList.contains("btn-supprimer-menu")) {
@@ -324,27 +333,42 @@ filtreStatut.addEventListener("change", afficherCommandes);
 filtreClient.addEventListener("input", afficherCommandes);
 
 // CRÉATION EMPLOYÉ
-document.getElementById("btn-ajout-employe").addEventListener("click", () => {
+async function chargerEmployesDepuisServeur() {
+    const response = await fetch("../PHP/getEmployes.php");
+    users = await response.json();
+    afficherEmployes();
+}
+document.getElementById("btn-ajout-employe").addEventListener("click", async () => {
     const fullname = prompt("Nom et Prénom de l'employé :");
     const email = prompt("Email de l'employé :");
     const password = prompt("Mot de passe temporaire :");
+
     if (!fullname || !email || !password) {
         alert("Tous les champs sont obligatoires.");
         return;
     }
-    const nouvelEmploye = {
-        id: "EMP-" + Date.now(),
-        fullname,
-        email,
-        password,
-        role: "employe",
-        suspendu: false
-    };
-    users.push(nouvelEmploye);
-    saveToLocalStorage("users", users);
-    alert(`Employé créé avec succès !\n\nUn email a été envoyé à ${email}.\nBonjour ${fullname}, votre compte employé a été créé. Vous devez contacter Julie ou José pour obtenir votre mot de passe définitif. L'équipe Vite & Gourmand vous souhaite la bienvenue au sein de son équipe. Bonne journée.`);
-    afficherEmployes();
+
+    // Envoi au backend PHP
+    const response = await fetch("../PHP/ajoutEmploye.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            fullname,
+            email,
+            password
+        })
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+        alert("Employé créé avec succès !");
+        chargerEmployesDepuisServeur(); // On recharge depuis MySQL
+    } else {
+        alert("Erreur : " + result.message);
+    }
 });
+
 
 // CRÉATION MENU
 document.getElementById("btn-ajout-menu").addEventListener("click", () => {
@@ -408,7 +432,7 @@ document.getElementById("btn-ajout-horaire").addEventListener("click", () => {
 });
 
 // AFFICHAGE INITIAL
-afficherEmployes();
+chargerEmployesDepuisServeur();
 afficherMenus();
 afficherPlats();
 afficherHoraires();
