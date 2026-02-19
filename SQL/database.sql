@@ -159,3 +159,4 @@ CREATE TABLE avis (
     statut VARCHAR(50) DEFAULT 'en attente',
     PRIMARY KEY (id)
 );
+
