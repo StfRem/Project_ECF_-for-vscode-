@@ -130,6 +130,8 @@ async function chargerCommandesDepuisServeur() {
         console.error("Erreur réseau :", error);
     }
 }
+
+// ON AFFICHE LA COMMANDE AVEC LES FILTRES APPLIQUÉS
 function afficherCommandes() {
     const recherche = filtreClient.value.toLowerCase();
     const statutFiltre = filtreStatut.value;
@@ -157,7 +159,7 @@ function afficherCommandes() {
                 <span>Prix total : ${cmd.prixTotal} €</span>
                 <span>Prestation : ${cmd.datePrestation.split('-').reverse().join('-')} à ${cmd.heurePrestation}</span>
                 <span>Adresse : ${cmd.adresse}, ${cmd.cp}, ${cmd.ville}</span>
-                <span>Téléphone : ${cmd.telephone}</span>
+                <span>Téléphone : ${cmd.gsm}</span>
                 <span>Statut actuel : <strong>${cmd.statut}</strong></span>
                 ${cmd.materiel ? '<span style="color:red;">⚠️ Matériel en prêt</span>' : ''}
             </div>
