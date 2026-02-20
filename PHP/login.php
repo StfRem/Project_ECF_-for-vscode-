@@ -18,10 +18,11 @@ if ($data) {
 
         // Si l'utilisateur existe
         if ($user) {
-            // utilisé password_hash() dans register.php, donc j'utilise password_verify()
-            if (password_verify($password, $user['password']) || $password === $user['password']) {
+            // On utilise UNIQUEMENT password_verify()
+            // Cette fonction compare le mot de passe saisi avec le hash stocké
+            if (password_verify($password, $user['password'])) {
                 
-                // On ne renvoie pas le password au JS pour la sécurité
+                // On supprime le hash du tableau avant l'envoi pour la sécurité
                 unset($user['password']);
                 
                 echo json_encode([
