@@ -9,7 +9,7 @@ $userId = $data["userId"];
 $note = $data["note"];
 $commentaire = $data["commentaire"];
 
-// 1. Récupérer la commande
+// Vérifier la commande
 $sql = "SELECT * FROM commandes WHERE id = ? AND userId = ?";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([$commandeId, $userId]);
@@ -20,28 +20,19 @@ if (!$cmd) {
     exit;
 }
 
-// 2. Préparer l'avis
-$avis = [
+// Insérer l'avis dans la table avis
+$sqlAvis = "
+    INSERT INTO avis (commande_id, user_id, nom_client, note, commentaire, date_creation, statut)
+    VALUES (:commande_id, :user_id, :nom_client, :note, :commentaire, NOW(), 'en attente')
+";
+
+$stmtAvis = $pdo->prepare($sqlAvis);
+$stmtAvis->execute([
+    "commande_id" => $commandeId,
+    "user_id" => $userId,
+    "nom_client" => $cmd["client_nom"], // ou le champ exact dans ta table commandes
     "note" => $note,
-    "commentaire" => $commentaire,
-    "date" => date("c")
-];
-
-// 3. Ajouter historique
-$historique = json_decode($cmd["historique"], true);
-$historique[] = [
-    "date" => date("c"),
-    "action" => "Avis laissé par l'utilisateur"
-];
-
-// 4. Mise à jour SQL
-$sqlUpdate = "UPDATE commandes SET avis = ?, historique = ? WHERE id = ? AND userId = ?";
-$stmtUpdate = $pdo->prepare($sqlUpdate);
-$stmtUpdate->execute([
-    json_encode($avis),
-    json_encode($historique),
-    $commandeId,
-    $userId
+    "commentaire" => $commentaire
 ]);
 
 echo json_encode(["success" => true]);

@@ -109,7 +109,7 @@ CREATE TABLE commandes (
     datePrestation DATE,
     heurePrestation TIME,
     gsm VARCHAR(20),
-    statut VARCHAR(30) DEFAULT 'en attente',
+    statut VARCHAR(50) DEFAULT 'en attente',
     historique JSON,
     avis JSON
 );
