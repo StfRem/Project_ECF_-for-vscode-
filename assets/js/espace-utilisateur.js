@@ -289,7 +289,7 @@ const profileForm = document.getElementById("profile-form");
 if (profileForm) {
     document.getElementById("edit-fullname").value = user.fullname || "";
     document.getElementById("edit-gsm").value = user.gsm || "";
-    document.getElementById("edit-address").value = user.address || "";
+    document.getElementById("edit-adresse").value = user.adresse || "";
     document.getElementById("edit-cp").value = user.cp || "";
     document.getElementById("edit-ville").value = user.ville || "";
 
@@ -299,7 +299,7 @@ if (profileForm) {
 
     const fullname = document.getElementById("edit-fullname").value;
     const gsm = document.getElementById("edit-gsm").value;
-    const address = document.getElementById("edit-address").value;
+    const adresse = document.getElementById("edit-adresse").value;
     const cp = document.getElementById("edit-cp").value;   // ✔ correction
     const ville = document.getElementById("edit-ville").value;
 
@@ -311,7 +311,7 @@ if (profileForm) {
                 id: user.id,
                 fullname,
                 gsm,
-                address,
+                adresse,
                 cp,
                 ville
             })
@@ -327,7 +327,7 @@ if (profileForm) {
 
             user.fullname = fullname;
             user.gsm = gsm;
-            user.address = address;
+            user.adresse = adresse;
             user.cp = cp;
             user.ville = ville;
 
