@@ -172,6 +172,21 @@ function afficherCommandes() {
 }
 
 // AFFICHAGE AVIS
+async function chargerAvisDepuisServeur() {
+    try {
+        const response = await fetch("../PHP/getAvis.php");
+        const result = await response.json();
+
+        if (result.status === "success") {
+            avisRecus = result.data; // On remplit la variable globale
+            afficherAvis();          // On rafraîchit l'affichage HTML
+        } else {
+            console.error("Erreur serveur :", result.message);
+        }
+    } catch (error) {
+        console.error("Erreur réseau lors du chargement des avis :", error);
+    }
+}
 function afficherAvis() {
     const listeAvis = document.getElementById("liste-avis");
     listeAvis.innerHTML = avisRecus.length === 0 ? "<p>Aucun avis en attente.</p>" : "";
@@ -328,24 +343,24 @@ document.addEventListener("click", (e) => {
     }
 
     // 5 - AVIS
-if (e.target.classList.contains("btn-valider-avis") || e.target.classList.contains("btn-refuser-avis")) {
-    const idAvis = e.target.dataset.id;
-    const action = e.target.classList.contains("btn-valider-avis") ? 'valider' : 'supprimer';
+    if (e.target.classList.contains("btn-valider-avis") || e.target.classList.contains("btn-refuser-avis")) {
+        const idAvis = e.target.dataset.id;
+        const action = e.target.classList.contains("btn-valider-avis") ? 'valider' : 'supprimer';
 
-    if (action === 'supprimer' && !confirm("Supprimer cet avis ?")) return;
+        if (action === 'supprimer' && !confirm("Supprimer cet avis ?")) return;
 
-    fetch("../PHP/modifierStatutAvis.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: idAvis, action: action })
-    })
-    .then(r => r.json())
-    .then(result => {
-        if (result.success) {
-            chargerAvisDepuisServeur(); // Rafraîchit la liste
-        }
-    });
-}
+        fetch("../PHP/modifierStatutAvis.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id: idAvis, action: action })
+        })
+            .then(r => r.json())
+            .then(result => {
+                if (result.success) {
+                    chargerAvisDepuisServeur(); // Rafraîchit la liste
+                }
+            });
+    }
 
     // 6 - HORAIRES
     if (e.target.classList.contains("btn-supprimer-horaire")) {
