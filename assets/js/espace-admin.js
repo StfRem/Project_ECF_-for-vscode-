@@ -11,8 +11,7 @@ if (!user || user.role !== "admin") {
 
 // DONNÉES
 let commandes = [];
-//let avis = getFromLocalStorage("avis");// On garde les avis en localStorage pour éviter de devoir faire une requête à chaque validation/refus, mais on pourrait aussi les charger depuis le serveur si tu préfères
-let avisRecus = [];  //gemini//
+let avisRecus = [];
 let users = getFromLocalStorage("users");
 let menus = getFromLocalStorage("menus");
 let plats = getFromLocalStorage("plats");
@@ -108,8 +107,8 @@ async function chargerCommandesDepuisServeur() {
         const result = await response.json();
 
         if (result.status === "success") {
-            commandes = result.data;   // Mise à jour de la variable globale
-            afficherCommandes();       // On lance l'affichage une fois les données reçues
+            commandes = result.data;
+            afficherCommandes();
         } else {
             console.error("Erreur chargement commandes :", result.message);
         }
@@ -178,8 +177,8 @@ async function chargerAvisDepuisServeur() {
         const result = await response.json();
 
         if (result.status === "success") {
-            avisRecus = result.data; // On remplit la variable globale
-            afficherAvis();          // On rafraîchit l'affichage HTML
+            avisRecus = result.data;
+            afficherAvis();
         } else {
             console.error("Erreur serveur :", result.message);
         }
@@ -238,7 +237,7 @@ function afficherHoraires() {
     );
 }
 
-// ÉCOUTEURS D'ÉVÉNEMENTS   les boutons
+// ÉCOUTEURS D'ÉVÉNEMENTS (les boutons)
 document.addEventListener("click", (e) => {
     const id = e.target.dataset.id;
 
@@ -265,7 +264,7 @@ document.addEventListener("click", (e) => {
         }
     }
 
-    // 2 -MENUS
+    // 2 - MENUS
     if (e.target.classList.contains("btn-supprimer-menu")) {
         if (supprimerElement(menus, (newData) => { menus = newData; }, id, "Supprimer ce menu ?")) {
             saveToLocalStorage("menus", menus);
@@ -316,7 +315,6 @@ document.addEventListener("click", (e) => {
         const commande = commandes.find(cmd => cmd.id === id);
         if (!commande) return;
 
-        // On garde tes prompts EXACTEMENT comme tu les veux
         const contact = prompt("Mode de contact utilisé pour prévenir le client (appel ou mail) :");
         const motif = prompt("Motif de l'annulation :");
 
@@ -380,9 +378,9 @@ document.addEventListener("click", (e) => {
 
     if (e.target.classList.contains("btn-modifier-horaire")) {
 
-        const id = e.target.dataset.id; // ← Récupération de l'ID
+        const id = e.target.dataset.id;
 
-        const h = horaires.find(h => h.id == id); // == pour éviter problème de type
+        const h = horaires.find(h => h.id == id);
         if (!h) return;
 
         const jour = prompt("Jour :", h.jour);
@@ -491,7 +489,6 @@ document.addEventListener("change", (e) => {
         const nouveauStatut = e.target.value;
         if (!nouveauStatut) return;
 
-        // On garde ton comportement EXACT
         if (nouveauStatut === "en attente du retour de matériel") {
             alert(`Email envoyé :
 Objet : Retour de matériel
@@ -528,7 +525,7 @@ async function chargerHorairesDepuisServeur() {
     const result = await response.json();
 
     if (result.status === "success") {
-        horaires = result.data;   // <-- LA LIGNE IMPORTANTE
+        horaires = result.data;   //
         afficherHoraires();
     } else {
         console.error("Erreur chargement horaires :", result.message);
