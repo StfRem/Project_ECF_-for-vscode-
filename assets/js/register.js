@@ -61,6 +61,9 @@ form.addEventListener("submit", function (e) {
                 fullname: newUser.fullname,
                 email: newUser.email,
                 gsm: newUser.gsm,
+                adresse: newUser.adresse,
+                cp: newUser.cp,
+                ville: newUser.ville,
                 role: newUser.role
             };
 
