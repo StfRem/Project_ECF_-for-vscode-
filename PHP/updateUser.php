@@ -11,15 +11,15 @@ file_put_contents("debug_user.txt", print_r($data, true));
 $id = $data["id"];
 $fullname = $data["fullname"];
 $gsm = $data["gsm"];
-$address = $data["address"];
+$adresse = $data["adresse"];
 $cp = $data["cp"];
 $ville = $data["ville"];
 
 $sql = "UPDATE users 
-        SET fullname = ?, gsm = ?, address = ?, cp = ?, ville = ?
+        SET fullname = ?, gsm = ?, adresse = ?, cp = ?, ville = ?
         WHERE id = ?";
 
 $stmt = $pdo->prepare($sql);
-$ok = $stmt->execute([$fullname, $gsm, $address, $cp, $ville, $id]);
+$ok = $stmt->execute([$fullname, $gsm, $adresse, $cp, $ville, $id]);
 
 echo json_encode(["success" => $ok]);

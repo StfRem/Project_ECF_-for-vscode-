@@ -125,7 +125,7 @@ document.getElementById("commande-form").addEventListener("submit", (e) => {
         prixTotal: window.totalFinal,
         reduction: nb >= menu.personnesMin + 5,
         materiel: menu.materiel,
-        adresse: document.getElementById("address").value,
+        adresse: document.getElementById("adresse").value,
         ville: document.getElementById("ville").value,
         cp: document.getElementById("cp").value,
         distance: Number(document.getElementById("distance").value),

@@ -91,7 +91,7 @@ CREATE TABLE users (
     email VARCHAR(150) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     gsm VARCHAR(20),
-    address TEXT,
+    adresse TEXT,
     cp VARCHAR(10),
     ville VARCHAR(255),
     role ENUM('admin','employe','utilisateur') NOT NULL DEFAULT 'utilisateur',

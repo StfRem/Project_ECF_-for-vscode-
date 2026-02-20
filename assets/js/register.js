@@ -6,7 +6,7 @@ form.addEventListener("submit", function (e) {
     const fullname = document.getElementById("fullname").value.trim();
     const gsm = document.getElementById("gsm").value.trim();
     const email = document.getElementById("email").value.trim();
-    const address = document.getElementById("address").value.trim();
+    const adresse = document.getElementById("adresse").value.trim();
     const ville = document.getElementById("ville").value.trim();
     const cp = document.getElementById("cp").value.trim();
     const password = document.getElementById("password").value.trim();
@@ -35,7 +35,7 @@ form.addEventListener("submit", function (e) {
         fullname,
         gsm,
         email,
-        address,
+        adresse,
         cp,
         ville,
         password,
