@@ -149,7 +149,7 @@ CREATE TABLE horaires (
 -- TABLE AVIS
 
 CREATE TABLE avis (
-    id VARCHAR(50) NOT NULL,
+    id INT NOT NULL AUTO_INCREMENT, -- On change VARCHAR en INT AUTO_INCREMENT
     commande_id VARCHAR(50),
     user_id VARCHAR(50),
     nom_client VARCHAR(100),
