@@ -11,7 +11,8 @@ if (!user || user.role !== "admin") {
 
 // DONNÉES
 let commandes = [];
-let avis = getFromLocalStorage("avis");
+//let avis = getFromLocalStorage("avis");// On garde les avis en localStorage pour éviter de devoir faire une requête à chaque validation/refus, mais on pourrait aussi les charger depuis le serveur si tu préfères
+let avisRecus = [];  //gemini//
 let users = getFromLocalStorage("users");
 let menus = getFromLocalStorage("menus");
 let plats = getFromLocalStorage("plats");
@@ -172,19 +173,20 @@ function afficherCommandes() {
 
 // AFFICHAGE AVIS
 function afficherAvis() {
-    const avisEnAttente = avis.filter(a => a.statut === "en attente");
-    afficherListe(
-        listeAvis,
-        avisEnAttente,
-        (a) => `
-            <strong>${a.nomClient}</strong><br>
+    const listeAvis = document.getElementById("liste-avis");
+    listeAvis.innerHTML = avisRecus.length === 0 ? "<p>Aucun avis en attente.</p>" : "";
+
+    avisRecus.forEach(a => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+            <strong>${a.nom_client}</strong> (Commande #${a.commande_id})<br>
             Note : ${a.note}/5<br>
             "${a.commentaire}"<br>
             <button class="btn-valider-avis" data-id="${a.id}">Valider</button>
-            <button class="btn-refuser-avis" data-id="${a.id}">Refuser</button>
-        `,
-        "Aucun avis en attente."
-    );
+            <button class="btn-refuser-avis btn-danger" data-id="${a.id}">Supprimer</button>
+        `;
+        listeAvis.appendChild(li);
+    });
 }
 
 // AFFICHAGE HORAIRES
@@ -326,16 +328,24 @@ document.addEventListener("click", (e) => {
     }
 
     // 5 - AVIS
-    if (e.target.classList.contains("btn-valider-avis")) {
-        avis = avis.map(a => a.id === id ? { ...a, statut: "validé" } : a);
-        saveToLocalStorage("avis", avis);
-        afficherAvis();
-    }
-    if (e.target.classList.contains("btn-refuser-avis")) {
-        avis = avis.filter(a => a.id !== id);
-        saveToLocalStorage("avis", avis);
-        afficherAvis();
-    }
+if (e.target.classList.contains("btn-valider-avis") || e.target.classList.contains("btn-refuser-avis")) {
+    const idAvis = e.target.dataset.id;
+    const action = e.target.classList.contains("btn-valider-avis") ? 'valider' : 'supprimer';
+
+    if (action === 'supprimer' && !confirm("Supprimer cet avis ?")) return;
+
+    fetch("../PHP/modifierStatutAvis.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: idAvis, action: action })
+    })
+    .then(r => r.json())
+    .then(result => {
+        if (result.success) {
+            chargerAvisDepuisServeur(); // Rafraîchit la liste
+        }
+    });
+}
 
     // 6 - HORAIRES
     if (e.target.classList.contains("btn-supprimer-horaire")) {
@@ -541,4 +551,4 @@ afficherMenus();
 afficherPlats();
 chargerHorairesDepuisServeur();
 chargerCommandesDepuisServeur();
-afficherAvis();
+chargerAvisDepuisServeur();
