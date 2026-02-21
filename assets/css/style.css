@@ -257,7 +257,7 @@ li {
     }
 }
 
-/*--------------  ACCUEIL CARD ACCUEIL AVIS  ---------------*/
+/*--------------  ACCUEIL CARD AVIS  ---------------*/
 .cards {
     display: flex;
     gap: 30px;
@@ -318,16 +318,15 @@ li {
     }
 }
 
-/*-------------------------------- FIN CARD ACCUEIL AVIS  -------------------------------------*/
-
-
+/*--------------  FIN CARD AVIS  ---------------*/
 
 
 
 /*----------------------------  MENUS HTML  ------------------------------------*/
-/* MARGE NAVBAR ET FILTRES */
+/* MARGE CONTENEUR ET FILTRES */
 .menus-page {
-    padding: 20px;
+    padding: 0px;
+    margin-top: 20px;
 }
 
 /* FILTRES */
