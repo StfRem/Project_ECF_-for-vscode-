@@ -521,7 +521,8 @@ li {
         font-size: 16px;
     }
 
-    .menu-card p,strong {
+    .menu-card p,
+    strong {
         font-size: 18px;
     }
 
@@ -535,12 +536,17 @@ li {
         max-width: 300px;
         /*largeur card adaptée*/
     }
-    .menu-card h1 {/*ok*/
+
+    .menu-card h1 {
+        /*ok*/
         font-size: 24px;
         margin-top: -8px;
     }
-    .menu-card li,strong {
-        font-size: 20px;/*ok*/
+
+    .menu-card li,
+    strong {
+        font-size: 20px;
+        /*ok*/
     }
 
 }
@@ -694,7 +700,6 @@ li {
 .admin-section {
     background: var(--card);
     padding: 20px;
-    border-radius: 8px;
     margin-bottom: 30px;
 }
 
@@ -844,50 +849,124 @@ li {
 }
 
 
-/*--------------------------  LOGIN HTML  ----------------------------------------------------*/
 
-.login-container {
-    background-color: var(--card);
-    width: auto;
-    min-height: 336px;
+/*Gestion des donnée personnelles*/
+.retourligneform #edit-cp {
+    margin-left: 12px;
 }
 
-.login-container form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    /* centre horizontalement */
-    gap: 12px;
+.retourligneform #edit-ville {
+    margin-left: 6px;
 }
 
-.login-container,
-h1 {
-    text-align: center;
-    margin-top: 1rem;
+.retourligneform .btn-primary {
+    margin-left: 76px;
 }
 
-.login-container label,
-.login-container input,
-.login-container button {
-    width: 30%;
+
+
+/*Gestion des donnée personnelles RESPONSIVE*/
+@media (max-width: 768px) {
+    .admin-section h2 {
+        text-align: center;
+    }
+    #profile-form {
+        margin-top: 10px;
+    }
+
+    #profile-form, 
+    .retourligneform {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    /* cases blanches IDENTIQUES */
+    #profile-form input {
+        width: 100% !important;
+        height: 30px;
+        box-sizing: border-box;
+        margin-left: 0 !important;
+        margin-bottom: 4px;
+        padding: 10px;
+        border: 2px solid #ccc;
+        border-radius: 10px;
+    }
+
+    /* Alignement des étiquettes */
+    #profile-form label {
+        display: block;
+        width: 100%;
+        margin-left: 0 !important;
+        margin-bottom: 5px;
+    }
+
+    /* Le bouton s'aligne sur les cases */
+    #profile-form .btn-primary {
+        width: 100% !important;
+        height: 45px;             /* Même hauteur que les cases blanches */
+        margin-left: 0 !important;
+        margin-top: 10px;
+    }
 }
 
-#btn-reset {
-    width: 30%;
-    margin: 15px auto 0 auto;
-    /* centre + espace */
-    display: block;
+/* A 356 px le texte Mes info perso casse je redimmensionne le titre */
+@media (max-width: 356px) {
+    .admin-section h2 {
+        font-size: 20px;
+        text-align: center;
+    }
 }
 
-.login-form,
-label {
-    font-weight: bold;
-    color: #0E0F0F;
-    font-size: 18px;
-}
 
-.login-form,
-#email,
-#password {
-    height: 30px;
-}
+
+    /*-------------------  FIN ESPACE UTILISATEUR  ------------------------*/
+
+
+    /*--------------------------  LOGIN HTML  ----------------------------------------------------*/
+
+    .login-container {
+        background-color: var(--card);
+        width: auto;
+        min-height: 336px;
+    }
+
+    .login-container form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        /* centre horizontalement */
+        gap: 12px;
+    }
+
+    .login-container,
+    h1 {
+        text-align: center;
+        margin-top: 1rem;
+    }
+
+    .login-container label,
+    .login-container input,
+    .login-container button {
+        width: 30%;
+    }
+
+    #btn-reset {
+        width: 30%;
+        margin: 15px auto 0 auto;
+        /* centre + espace */
+        display: block;
+    }
+
+    .login-form,
+    label {
+        font-weight: bold;
+        color: #0E0F0F;
+        font-size: 18px;
+    }
+
+    .login-form,
+    #email,
+    #password {
+        height: 30px;
+    }
