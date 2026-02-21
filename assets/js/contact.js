@@ -19,7 +19,7 @@ form.addEventListener("submit", (e) => {
     // Affichage confirmation
     form.classList.add("hidden");
     confirmation.classList.remove("hidden");
-
+    // Redirection auto après 3 secondes (pratique)
     setTimeout(() => {
         location.href = "../index.html";
     }, 3000);
