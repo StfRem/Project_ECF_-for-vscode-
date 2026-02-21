@@ -21,6 +21,6 @@ form.addEventListener("submit", (e) => {
     confirmation.classList.remove("hidden");
 
     setTimeout(() => {
-        location.href = "./index.html";
+        location.href = "../index.html";
     }, 3000);
 });
