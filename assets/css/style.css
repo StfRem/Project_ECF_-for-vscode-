@@ -988,3 +988,15 @@ label {
 #password {
     height: 30px;
 }
+
+/* LOGIN RESPONSIVE */
+@media (max-width: 426px) {
+    #btn-reset, btn-secondary {
+        width: 46%;
+    }
+}
+@media (max-width: 376px) {
+    #btn-reset, btn-secondary {
+        width: 60%;
+    }
+}
