@@ -4,9 +4,11 @@
     padding: 0;
     box-sizing: border-box;
 }
+
 /*--------------MON SETTING PERSONNEL------------------*/
-html, body{
-    background:var(--fond)
+html,
+body {
+    background: var(--fond)
 }
 
 /* POLICE */
@@ -32,7 +34,8 @@ h3 {
 p,
 li {
     font-size: 18px;
-    margin-top: 5px; /* Aère un peu le texte*/
+    margin-top: 5px;
+    /* Aère un peu le texte*/
 }
 
 /* PALETTE (charte graphique) */
@@ -50,9 +53,9 @@ li {
 
 /*------------------  RÉGLAGE DE TOUS LES BOUTONS  ------------------------*/
 
-.btn-primary, 
-.btn-suspend, 
-.btn-supprimer, 
+.btn-primary,
+.btn-suspend,
+.btn-supprimer,
 .btn-modifier-menu,
 .btn-supprimer-menu,
 .btn-modifier-plat,
@@ -67,9 +70,8 @@ li {
 .btn-detail,
 .btn-details2,
 .btn-commande,
-#btn-reset ,
-#login-form button
-{
+#btn-reset,
+#login-form button {
     background: #FFA7A1;
     color: #0E0F0F;
     border: none;
@@ -79,7 +81,7 @@ li {
     font-weight: bold;
     min-width: 120px;
     margin-top: 10px;
-    font-weight: bold;
+    font-size: 1rem;
 }
 
 /*----------------------------------------------FIN RÉGLAGE DES BOUTONS  ---------------------------------------------------------------------------*/
@@ -127,6 +129,41 @@ li {
     font-size: 22px;
     font-weight: 500;
 }
+
+
+/* NAVBAR RESPONSIVE */
+@media (max-width: 768px) {
+    .burger {
+        display: block;
+        cursor: pointer;
+        font-size: 30px;
+    }
+
+    .menu_header {
+        display: none; /* Caché par défaut */
+        flex-direction: column;
+        background-color: var(--card);
+        position: absolute;
+        left: auto; 
+        transform: none;
+        top: 60px; 
+        right: 20px;
+        padding: 20px;
+        border-radius: 8px;
+        gap: 15px;
+    }
+
+    .menu_header.open { /* Affiché lorsque la classe "open" est ajoutée */
+        display: flex;
+        margin: auto;
+    }
+
+    .menu_header a {
+        font-size: 18px;
+        /* plus lisible en mobile */
+    }
+}
+
 /*-----------------FIN NAVBAR ----------------------------- */
 
 
@@ -156,12 +193,31 @@ li {
 /* Mentions légales alignées à gauche */
 .mention {
     text-align: left;
-    margin-top: 20px;
+    margin-top: 10px;
 }
+
 .mention a {
     font-size: 14px;
     color: var(--txt-dark);
 }
+/* FOOTER RESPONSIVE */
+@media (max-width: 768px) {
+    .footer {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .ul_horaire li {
+        font-size: 14px;
+    }
+
+    .mention a {
+        font-size: 12px;
+    }
+}
+
+
+
 
 /*-----------------------FIN FOOTER ----------------------------------------*/
 
@@ -178,65 +234,30 @@ li {
 }
 
 /* ---------- ACCUEIL HTML VERSION MOBILE ---------- */
+/* Ajustement des h1 responsive*/
 @media (max-width: 768px) {
-
-    /* TAILLES DE POLICE */
-    h1 {
-        font-size: 24px;
+    .descriptif h1{
+        font-size: 28px;
     }
 
-    h2 {
-        font-size: 16px;
+}
+@media (max-width: 450px) {
+    .descriptif h1{
+        font-size: 32px; /* meilleur présentation du texte */
     }
-
-    h3 {
-        font-size: 16px;
+}
+@media (max-width: 380px) {
+    .descriptif h1{
+        font-size: 28px; /*meilleur présentation du texte */
     }
-
-    p,
-    li {
-        font-size: 16px;
-        margin-top: 5px;
-    }
-
-    .mention a {
-        font-size: 12px;
-    }
-
-
-    /* NAVBAR MOBILE */
-    .menu_header.open {
-        display: flex;
-        margin: auto;
-    }
-
-    .menu_header {
-        display: none;
-        flex-direction: column;
-        background-color: var(--card);
-        position: absolute;
-        top: 80px;
-        right: 20px;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        z-index: 999;
-    }
-
-    .menu_header a {
-        font-size: 16px;
-        /* plus lisible en mobile */
-    }
-
-    .burger {
-        display: block;
-        cursor: pointer;
-        font-size: 30px;
+}
+@media (max-width: 340px) {
+    .descriptif h1{
+        font-size: 24px; /*meilleur présentation du texte */
     }
 }
 
-
-/*  CARD ACCUEIL AVIS  */
+/*--------------  ACCUEIL CARD ACCUEIL AVIS  ---------------*/
 .cards {
     display: flex;
     gap: 30px;
@@ -466,6 +487,7 @@ li {
         height: 40px;
     }
 }
+
 /* CARDS MENUS GLOBAL MENU.HTML RESPONSIVE */
 @media (max-width: 475px) {
 
@@ -473,8 +495,9 @@ li {
         max-width: 340px;
     }
 }
+
 @media (max-width: 360px) {
-        .menu-card {
+    .menu-card {
         max-width: 300px;
     }
 }
@@ -501,11 +524,13 @@ li {
     margin-bottom: 15px;
     border-radius: 8px;
     border: 1px solid #ddd;
-    font-size: 0.9375rem; /* 15px */
+    font-size: 0.9375rem;
+    /* 15px */
 }
 
 .prix-info {
-    font-size: 1.125rem; /* 18px */
+    font-size: 1.125rem;
+    /* 18px */
     font-weight: bold;
     margin-top: 10px;
     margin-bottom: 20px;
@@ -526,7 +551,7 @@ li {
     border-radius: 12px;
     width: 100%;
     max-width: 450px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
 }
 
 .register-card h1 {
@@ -558,7 +583,7 @@ li {
 
 /*------------CONTACT HTML  ----------------------*/
 
-.contact-container h1{
+.contact-container h1 {
     text-align: center;
     margin-top: 20px;
 }
@@ -601,8 +626,10 @@ li {
 
 /*--------------- MENTION LEGAL HTML -----------------------*/
 .legal-container {
-    max-width: 900px; /* Valeur la plus large conservée */
-    margin: 40px auto; /* Marge supérieure/inférieure plus importante */
+    max-width: 900px;
+    /* Valeur la plus large conservée */
+    margin: 40px auto;
+    /* Marge supérieure/inférieure plus importante */
     padding: 20px;
 }
 
@@ -710,6 +737,7 @@ li {
 
 /* ====== RESPONSIVE ====== */
 @media (max-width: 768px) {
+
     /* Section commandes */
     .admin-section .filters {
         display: flex;
@@ -757,13 +785,14 @@ li {
     margin: 0px auto 0 auto;
     padding: 20px;
 
-    background-color: #4A6A69; /* couleur de fond de ta charte */
+    background-color: #4A6A69;
+    /* couleur de fond de ta charte */
     border-radius: 10px;
     position: relative;
     z-index: 2;
 }
 
-.commandes-liste{
+.commandes-liste {
     color: #FFFFFF;
 }
 
@@ -774,19 +803,22 @@ li {
 
 /*--------------------------  LOGIN HTML  ----------------------------------------------------*/
 
-.login-container{
-    background-color:var(--card);
+.login-container {
+    background-color: var(--card);
     width: auto;
     min-height: 336px;
 }
+
 .login-container form {
     display: flex;
     flex-direction: column;
-    align-items: center; /* centre horizontalement */
+    align-items: center;
+    /* centre horizontalement */
     gap: 12px;
 }
 
-.login-container, h1{
+.login-container,
+h1 {
     text-align: center;
     margin-top: 1rem;
 }
@@ -799,18 +831,20 @@ li {
 
 #btn-reset {
     width: 30%;
-    margin: 15px auto 0 auto; /* centre + espace */
+    margin: 15px auto 0 auto;
+    /* centre + espace */
     display: block;
 }
 
-.login-form ,label{
+.login-form,
+label {
     font-weight: bold;
     color: #0E0F0F;
     font-size: 18px;
 }
 
-.login-form ,#email, #password{
+.login-form,
+#email,
+#password {
     height: 30px;
 }
-
-
