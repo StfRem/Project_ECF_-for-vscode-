@@ -62,16 +62,16 @@ function afficherMenu(menu) {
 
                 <p><strong>Thème :</strong> ${menu.theme}</p>
                 <p><strong>Régime :</strong> ${menu.regime}</p>
-
+                <br>
                 <h3>Entrées</h3>
                 <ul>${htmlEntrees}</ul>
-
+                <br>
                 <h3>Plats</h3>
                 <ul>${htmlPlats}</ul>
-
+                <br>
                 <h3>Desserts</h3>
                 <ul>${htmlDesserts}</ul>
-
+                <br>
                 <p><strong>Conditions :</strong> ${menu.conditions}</p>
                 <p><strong>Prix :</strong> ${menu.prix} € (pour ${menu.personnesMin} pers.)</p>
                 <p><strong>Stock :</strong> ${menu.stock}</p>
