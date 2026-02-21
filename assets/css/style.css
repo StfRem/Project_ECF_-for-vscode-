@@ -140,20 +140,22 @@ li {
     }
 
     .menu_header {
-        display: none; /* Caché par défaut */
+        display: none;
+        /* Caché par défaut */
         flex-direction: column;
         background-color: var(--card);
         position: absolute;
-        left: auto; 
+        left: auto;
         transform: none;
-        top: 60px; 
+        top: 60px;
         right: 20px;
         padding: 20px;
         border-radius: 8px;
         gap: 15px;
     }
 
-    .menu_header.open { /* Affiché lorsque la classe "open" est ajoutée */
+    .menu_header.open {
+        /* Affiché lorsque la classe "open" est ajoutée */
         display: flex;
         margin: auto;
     }
@@ -200,6 +202,7 @@ li {
     font-size: 14px;
     color: var(--txt-dark);
 }
+
 /* FOOTER RESPONSIVE */
 @media (max-width: 768px) {
     .footer {
@@ -236,24 +239,30 @@ li {
 /* ---------- ACCUEIL HTML VERSION MOBILE ---------- */
 /* Ajustement des h1 responsive*/
 @media (max-width: 768px) {
-    .descriptif h1{
+    .descriptif h1 {
         font-size: 28px;
     }
 
 }
+
 @media (max-width: 450px) {
-    .descriptif h1{
-        font-size: 32px; /* meilleur présentation du texte */
+    .descriptif h1 {
+        font-size: 32px;
+        /* meilleur présentation du texte */
     }
 }
+
 @media (max-width: 380px) {
-    .descriptif h1{
-        font-size: 28px; /*meilleur présentation du texte */
+    .descriptif h1 {
+        font-size: 28px;
+        /*meilleur présentation du texte */
     }
 }
+
 @media (max-width: 340px) {
-    .descriptif h1{
-        font-size: 24px; /*meilleur présentation du texte */
+    .descriptif h1 {
+        font-size: 24px;
+        /*meilleur présentation du texte */
     }
 }
 
@@ -452,16 +461,15 @@ li {
     padding: 0;
 }
 
-/*---- CARDS MENUS GLOBAL MENU.HTML RESPONSIVE  ----*/
+/*---- CARDS MENU-DETAIL RESPONSIVE  ----*/
 @media (max-width: 768px) {
-
     .menu-card {
         flex-direction: column;
         align-items: center;
         text-align: center;
         gap: 20px;
         padding: 20px;
-        max-width: 600px;
+        max-width: 650px;
     }
 
     .menu-img {
@@ -487,18 +495,54 @@ li {
     }
 }
 
-/* CARDS MENUS GLOBAL MENU.HTML RESPONSIVE */
 @media (max-width: 475px) {
-
     .menu-card {
-        max-width: 340px;
+        max-width: 398px;
+        /*largeur card adaptée*/
+    }
+
+    .menu-card h1 {
+        margin-top: -8px;
+    }
+}
+
+@media (max-width: 400px) {
+    .menu-card {
+        max-width: 358px;
+        /*largeur card adaptée*/
+    }
+
+    .menu-card h1 {
+        font-size: 24px;
+        margin-top: -8px;
+    }
+
+    .menu-card li {
+        font-size: 16px;
+    }
+
+    .menu-card p,strong {
+        font-size: 18px;
+    }
+
+    .menu-card h3 {
+        font-size: 18px;
     }
 }
 
 @media (max-width: 360px) {
     .menu-card {
         max-width: 300px;
+        /*largeur card adaptée*/
     }
+    .menu-card h1 {/*ok*/
+        font-size: 24px;
+        margin-top: -8px;
+    }
+    .menu-card li,strong {
+        font-size: 20px;/*ok*/
+    }
+
 }
 
 /*---------------------  PAGE COMMANDE  --------------------------------- */
