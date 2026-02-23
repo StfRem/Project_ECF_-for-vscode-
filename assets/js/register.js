@@ -63,8 +63,13 @@ form.addEventListener("submit", function (e) {
 
             localStorage.setItem("userIsLogged", "true");
 
+
+
+
+
+//mofification du localStorage pour stocker les infos de l'utilisateur connecté
             const userSession = {
-                id: newUser.id,
+                id: data.id,
                 fullname: newUser.fullname,
                 email: newUser.email,
                 gsm: newUser.gsm,
@@ -75,7 +80,7 @@ form.addEventListener("submit", function (e) {
             };
 
             localStorage.setItem("user", JSON.stringify(userSession));
-
+            // Redirection après l'inscription
             const pendingMenu = localStorage.getItem("pendingMenu");
             if (pendingMenu) {
                 localStorage.removeItem("pendingMenu");
