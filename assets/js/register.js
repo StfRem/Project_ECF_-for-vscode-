@@ -39,7 +39,6 @@ form.addEventListener("submit", function (e) {
 
     // OBJET ENVOYÉ AU PHP
     const newUser = {
-        id: "USR-" + Date.now(),
         fullname,
         gsm,
         email,
@@ -82,7 +81,7 @@ form.addEventListener("submit", function (e) {
                 localStorage.removeItem("pendingMenu");
                 location.href = `./commande.html?id=${pendingMenu}`;
             } else {
-                location.href = "./index.html";
+                location.href = "../index.html";
             }
 
         } else {
