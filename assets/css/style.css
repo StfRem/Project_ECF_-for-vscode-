@@ -987,16 +987,18 @@ label {
 #email,
 #password {
     height: 30px;
+    font-size: 14px;
 }
 
 /* LOGIN RESPONSIVE */
 @media (max-width: 426px) {
     #btn-reset, btn-secondary {
-        width: 46%;
-    }
-}
-@media (max-width: 376px) {
-    #btn-reset, btn-secondary {
         width: 60%;
     }
+    .login-container label, .login-container input, .login-container button {
+    width: 60%;
+}
+.login-form, #email, #password {
+    font-size:13px;
+}
 }
