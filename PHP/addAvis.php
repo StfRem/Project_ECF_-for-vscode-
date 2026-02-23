@@ -44,3 +44,10 @@ try {
 } catch (PDOException $e) {
     echo json_encode(["success" => false, "message" => "Erreur SQL : " . $e->getMessage()]);
 }
+
+// 3. Une fois l'avis ajouté le bouton disparait
+    $stmtUpdate = $pdo->prepare("UPDATE commandes SET avis = ? WHERE id = ?");
+    $stmtUpdate->execute([
+        json_encode(["note" => $note, "commentaire" => $commentaire, "date" => date("c")]),
+        $commandeId
+    ]);
