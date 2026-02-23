@@ -23,7 +23,7 @@ class Database {
     }
 }
 
-// 🔥 Création automatique de $pdo pour tous les scripts
-//$db = new Database();
-//$pdo = $db->getConnection();
-// plus besoin doit respecter la correction POO (programmation Orienté Objet) pure
+//Création automatique de $pdo pour tous les scripts
+$db = new Database();
+$pdo = $db->getConnection();
+
