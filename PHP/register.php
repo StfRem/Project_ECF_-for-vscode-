@@ -5,7 +5,6 @@ require_once 'Database.php';
 $db = new Database();
 $pdo = $db->getConnection();
 
-// 1. Récupération du JSON envoyé
 $json = file_get_contents('php://input');
 $data = json_decode($json, true);
 
@@ -15,22 +14,20 @@ if (!$data) {
 }
 
 try {
-    // 2. Sécurité : hachage du mot de passe
+    // 1. Hachage du mot de passe
     $passwordHache = password_hash($data['password'], PASSWORD_DEFAULT);
 
-    // 3. Gestion ID et rôle
-    $id = !empty($data['id']) ? $data['id'] : 'USR-' . uniqid();
+    // 2. Gestion du rôle (ID est géré par MySQL AUTO_INCREMENT) c'est ma derniere modification
     $role = !empty($data['role']) ? $data['role'] : 'utilisateur';
 
-    // 4. Préparation SQL
-    $sql = "INSERT INTO users (id, fullname, gsm, email, adresse, cp, ville, password, role)
-            VALUES (:id, :fullname, :gsm, :email, :adresse, :cp, :ville, :password, :role)";
+    // 3. SQL : On ne mentionne PAS la colonne 'id'
+    $sql = "INSERT INTO users (fullname, gsm, email, adresse, cp, ville, password, role)
+            VALUES (:fullname, :gsm, :email, :adresse, :cp, :ville, :password, :role)";
 
     $stmt = $pdo->prepare($sql);
 
-    // 5. Exécution
+    // 4. Exécution sans la clé ':id'
     $stmt->execute([
-        ':id'       => $id,
         ':fullname' => $data['fullname'] ?? null,
         ':gsm'      => $data['gsm'] ?? null,
         ':email'    => $data['email'],
@@ -41,9 +38,13 @@ try {
         ':role'     => $role
     ]);
 
+    // 5. RÉCUPÉRATION DE L'ID : Très important pour ton register.js
+    $newId = $pdo->lastInsertId();
+
     echo json_encode([
         'status' => 'success',
-        'message' => 'Utilisateur enregistré avec succès'
+        'message' => 'Utilisateur enregistré avec succès',
+        'id' => $newId // Le JS récupèrera ce chiffre (1, 2, 3...)
     ]);
 
 } catch (PDOException $e) {

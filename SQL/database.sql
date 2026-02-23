@@ -86,7 +86,7 @@ INSERT INTO desserts VALUES
 
 -- TABLE USERS
 CREATE TABLE users (
-    id VARCHAR(50) PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY, -- On passe en INT et on ajoute l'auto-incrément
     fullname VARCHAR(100) NOT NULL,
     email VARCHAR(150) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
@@ -98,8 +98,10 @@ CREATE TABLE users (
     suspendu TINYINT(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB;
 
-INSERT INTO users VALUES
-('USR-1770864050506', 'José', 'admin@site.com', '$2y$10$XlrqFb3xv0OoaiINPewVpOgarsWuI8HaLcsL0HyiHoojmYfcx3cKS', '0612234578', 'Bordeaux', '48000', 'Bordeaux', 'admin', 0)
+INSERT INTO users (fullname, email, password, gsm, adresse, cp, ville, role, suspendu)
+VALUES 
+('José', 'admin@site.com', '$2y$10$XlrqFb3xv0OoaiINPewVpOgarsWuI8HaLcsL0HyiHoojmYfcx3cKS', '0612234578', 'Bordeaux', '48000', 'Bordeaux', 'admin', 0);
+
 
 -- TABLE COMMANDES
 CREATE TABLE commandes (
@@ -145,4 +147,3 @@ CREATE TABLE horaires (
     ouverture VARCHAR(10) NOT NULL,
     fermeture VARCHAR(10) NOT NULL
 ) ENGINE=InnoDB;
-
