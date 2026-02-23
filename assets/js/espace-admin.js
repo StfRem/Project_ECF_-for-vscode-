@@ -3,7 +3,7 @@ const getFromLocalStorage = (key) => JSON.parse(localStorage.getItem(key)) || []
 const saveToLocalStorage = (key, data) => localStorage.setItem(key, JSON.stringify(data));
 
 // Vérification du rôle administrateur
-const user = getFromLocalStorage("user");
+const user = JSON.parse(localStorage.getItem("user"));
 if (!user || user.role !== "admin") {
     alert("Accès réservé à l'administrateur.");
     location.href = "./login.html";
