@@ -1,6 +1,7 @@
 const form = document.getElementById("register-form");
 
 form.addEventListener("submit", function (e) {
+    // Empêche le rechargement de la page
     e.preventDefault();
 
     const fullname = document.getElementById("fullname").value.trim();
@@ -11,7 +12,14 @@ form.addEventListener("submit", function (e) {
     const cp = document.getElementById("cp").value.trim();
     const password = document.getElementById("password").value.trim();
 
-    // VALIDATIONS
+    // Vérification RGPD (Verifie si la case CGV est bien cochée)
+    const cgvChecked = document.getElementById("accept-cgv").checked;
+    if (!cgvChecked) {
+        alert("Vous devez accepter les conditions générales.");
+        return;
+    }
+
+    // VALIDATIONS (que ce soit conforme au format attendu)
     const regexPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{10,}$/;
     const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const regexGSM = /^0[67]\d{8}$/;
