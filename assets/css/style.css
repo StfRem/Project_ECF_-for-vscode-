@@ -534,6 +534,7 @@ li {
     .menu-card h1 {
         margin-top: -8px;
     }
+}
 
 
     @media (max-width: 360px) {
@@ -546,7 +547,7 @@ li {
             margin-top: -8px;
         }
     }
-}
+
 
 
 /*---------------------  PAGE COMMANDE  --------------------------------- */
@@ -796,22 +797,21 @@ li {
 
     .filters select,
     .filters input {
-        width: 22%;
+        width: 34%;
         padding: 8px;
         box-sizing: border-box;
-        text-align: center;
     }
 }
 @media (max-width: 767px) {
         .filters select,
         .filters input {
-        width: 40%;
+        width: 54%;
     }
 }
 @media (max-width: 378px) {
         .filters select,
         .filters input {
-        width: 46%;
+        width: 70%;
     }
 }
 
