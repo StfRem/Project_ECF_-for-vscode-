@@ -86,45 +86,50 @@ function afficherCommandes(commandes) {
 
 // 4. Gestion centralisée des clics
 document.addEventListener("click", async (e) => {
-    const target = e.target;
-
-    // --- ANNULER COMMANDE ---
-    if (target.classList.contains("btn-annuler")) {
-        const id = target.dataset.id;
-        if (!id) return;
-
-        if (!confirm("Voulez-vous vraiment annuler cette commande ?")) return;
-
-        try {
-            const res = await fetch("../PHP/annulerCommande.php", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ commandeId: id, userId: user.id })
-            });
-            const data = await res.json();
-
-            if (!data.success) {
-                alert(data.message || "Erreur lors de l'annulation.");
-                return;
-            }
-
-            alert("Commande annulée avec succès.");
-            chargerCommandes();
-
-        } catch (err) {
-            console.error(err);
-            alert("Erreur technique lors de l'annulation.");
+    for (const cls of e.target.classList) {
+        const handler = clickHandlers.get(cls);
+        if (handler) {
+             handler(e);        // on passe tout l’événement au besoin
+            return;                  // on stoppe dès qu’une action a été exécutée
         }
-        return;
     }
+});
 
-// --- AFFICHER FORMULAIRE MODIFICATION ---
-if (target.classList.contains("btn-modifier")) {
-    const id = target.dataset.id;
+// fonctions de traitement
+async function annulerCommande(e) {
+    const id = e.target.dataset.id;
+    if (!id) return;
+
+    if (!confirm("Voulez-vous vraiment annuler cette commande ?")) return;
+
+    try {
+        const res = await fetch("../PHP/annulerCommande.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ commandeId: id, userId: user.id })
+        });
+        const data = await res.json();
+
+        if (!data.success) {
+            alert(data.message || "Erreur lors de l'annulation.");
+            return;
+        }
+
+        alert("Commande annulée avec succès.");
+        chargerCommandes();
+
+    } catch (err) {
+        console.error(err);
+        alert("Erreur technique lors de l'annulation.");
+    }
+}
+
+function afficherFormulaireModification(e) {
+    const id = e.target.dataset.id;
     const zone = document.getElementById(`zone-modification-${id}`);
     if (!zone) return;
 
-    const li = target.closest(".commande-item");
+    const li = e.target.closest(".commande-item");
     const details = li.querySelector(".commande-details");
 
     const nb = details.querySelector("p:nth-of-type(2)").textContent.replaceAll(/\D+/g, "");
@@ -168,21 +173,16 @@ if (target.classList.contains("btn-modifier")) {
             <button class="btn-annuler-modif btn-secondary" data-id="${id}">Annuler les modifications</button>
         </div>
     `;
-    return;
 }
 
+function fermerFormulaire(e) {
+    const id = e.target.dataset.id;
+    const zone = document.getElementById(`zone-modification-${id}`);
+    if (zone) zone.innerHTML = "";
+}
 
-// --- FERMER FORMULAIRE ---
-    if (target.classList.contains("btn-annuler-modif")) {
-        const id = target.dataset.id;
-        const zone = document.getElementById(`zone-modification-${id}`);
-        if (zone) zone.innerHTML = "";
-        return;
-    }
-
-// --- VALIDER MODIFICATION ---
-if (target.classList.contains("btn-valider-modif")) {
-    const id = target.dataset.id;
+async function validerModification(e) {
+    const id = e.target.dataset.id;
 
     const nb = Number(document.getElementById(`mod-nb-${id}`).value);
     const date = document.getElementById(`mod-date-${id}`).value;
@@ -230,55 +230,70 @@ if (target.classList.contains("btn-valider-modif")) {
         console.error(err);
         alert("Erreur technique lors de la mise à jour.");
     }
-    return;
 }
 
+async function donnerAvis(e) {
+    const id = e.target.dataset.id;
 
+    let note;
+    while (true) {
+        note = prompt("Note (1 à 5) :");
+        if (note === null) return;
+        note = Number(note);
+        if (note >= 1 && note <= 5) break;
+        alert("La note doit être entre 1 et 5.");
+    }
 
-// --- DONNER UN AVIS ---
-    if (target.classList.contains("btn-avis")) {
-        const id = target.dataset.id;
+    const commentaire = prompt("Votre commentaire :");
+    if (!commentaire) {
+        alert("Le commentaire est obligatoire.");
+        return;
+    }
 
-        let note;
-        while (true) {
-            note = prompt("Note (1 à 5) :");
-            if (note === null) return;
-            note = Number(note);
-            if (note >= 1 && note <= 5) break;
-            alert("La note doit être entre 1 et 5.");
-        }
+    try {
+        const res = await fetch("../PHP/addAvis.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                commandeId: id,
+                userId: user.id,
+                note,
+                commentaire
+            })
+        });
 
-        const commentaire = prompt("Votre commentaire :");
-        if (!commentaire) {
-            alert("Le commentaire est obligatoire.");
+        const data = await res.json();
+
+        if (!data.success) {
+            alert(data.message || "Erreur lors de l'enregistrement de l'avis.");
             return;
         }
 
-        try {
-            const res = await fetch("../PHP/addAvis.php", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    commandeId: id,
-                    userId: user.id,
-                    note,
-                    commentaire
-                })
-            });
+        alert("Merci pour votre avis !");
+        chargerCommandes();
 
-            const data = await res.json();
+    } catch (err) {
+        console.error(err);
+        alert("Erreur technique lors de l'enregistrement de l'avis.");
+    }
+}
 
-            if (!data.success) {
-                alert(data.message || "Erreur lors de l'enregistrement de l'avis.");
-                return;
-            }
+// table de dispatch : classe → handler
+const clickHandlers = new Map([
+    ["btn-annuler", annulerCommande],
+    ["btn-modifier", afficherFormulaireModification],
+    ["btn-annuler-modif", fermerFormulaire],
+    ["btn-valider-modif", validerModification],
+    ["btn-avis", donnerAvis]
+]);
 
-            alert("Merci pour votre avis !");
-            chargerCommandes();
-
-        } catch (err) {
-            console.error(err);
-            alert("Erreur technique lors de l'enregistrement de l'avis.");
+// écouteur unique simplifié
+document.addEventListener("click", async e => {
+    for (const cls of e.target.classList) {
+        const handler = clickHandlers.get(cls);
+        if (handler) {
+             handler(e);        // on passe tout l’événement au besoin
+            return;                  // on stoppe dès qu’une action a été exécutée
         }
     }
 });
