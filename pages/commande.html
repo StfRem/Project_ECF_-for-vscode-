@@ -28,27 +28,27 @@
 
                 <h2>Informations client</h2>
 
-                <label>Nom et Prénom</label>
+                <label for="fullname">Nom et Prénom</label>
                 <input type="text" id="fullname" readonly>
 
-                <label>Email</label>
+                <label for="email">Email</label>
                 <input type="email" id="email" readonly>
 
-                <label>Numéro de téléphone</label>
+                <label for="gsm">Numéro de téléphone</label>
                 <input type="text" id="gsm" readonly>
 
                 <h2>Prestation</h2>
 
-                <label>Adresse de livraison</label>
+                <label for="adresse">Adresse de livraison</label>
                 <input type="text" id="adresse" placeholder="N° et nom de la rue seulement" required>
 
-                <label>Ville</label>
+                <label for="ville">Ville</label>
                 <input type="text" id="ville" required>
 
-                <label>Code postal</label>
+                <label for="cp">Code postal</label>
                 <input type="text" id="cp" required>
 
-                <label>Distance en km</label>
+                <label for="distance">Distance en km</label>
                 <input type="number" id="distance" min="0" value="0">
                 <p class="info-livraison">
                     Livraison : 5 €.<br>
@@ -56,14 +56,15 @@
                 </p>
                 <br>
 
-                <label>Date de la prestation</label>
+                <label for="date">Date de la prestation</label>
                 <input type="date" id="date" required>
 
-                <label>Heure souhaitée</label>
+                <label for="heure">Heure souhaitée</label>
                 <input type="time" id="heure" required>
 
                 <h2>Nombre de personnes</h2>
 
+                <label for="nbPersonnes">Nombre de personnes</label>
                 <input type="number" id="nbPersonnes" min="1" required>
 
                 <p id="prixTotal" class="prix-info">Prix total : 0 €</p>

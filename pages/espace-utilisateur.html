@@ -13,7 +13,7 @@
     <header id="header"></header>
 
     <script type="module">
-        import { loadNavbar, loadFooter } from "../assets/js/script.js";
+        import { loadNavbar } from "../assets/js/script.js";
         loadNavbar();
     </script>
     
@@ -22,19 +22,19 @@
         <h2>Mes Informations Personnelles</h2>
         <form id="profile-form">
 
-            <label>Nom Prénom</label>
+            <label for="edit-fullname">Nom Prénom</label>
             <input type="text" id="edit-fullname">
 
-            <label>GSM</label>
+            <label for="edit-gsm">GSM</label>
             <input type="text" id="edit-gsm">
 
-            <label>Adresse (Rue uniquement)</label>
+            <label for="edit-adresse">Adresse (Rue uniquement)</label>
             <input type="text" id="edit-adresse" placeholder="Numéro et nom de rue">
             <div class="retourligneform">
-                <label>Code postal</label>
+                <label for="edit-cp">Code postal</label>
                 <input type="text" id="edit-cp">
 
-                <label>Ville</label>
+                <label for="edit-ville">Ville</label>
                 <input type="text" id="edit-ville">
                 <button type="submit" class="btn-primary">Mettre à jour mon profil</button>
             </div>
