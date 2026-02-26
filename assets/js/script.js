@@ -6,7 +6,7 @@ export function loadNavbar() {
     if (!header) return;
 
     // On vérifie si on est dans le dossier /pages/
-    const isInsidePages = window.location.pathname.indexOf("/pages/") !== -1;
+    const isInsidePages = globalThis.location.pathname.includes("/pages/");
 
     if (isInsidePages) {
         // LIENS DEPUIS LE DOSSIER PAGES
@@ -51,7 +51,7 @@ export function loadNavbar() {
             e.preventDefault();
             localStorage.clear(); 
             alert("Vous êtes déconnecté.");
-            window.location.href = isInsidePages ? "../index.html" : "./index.html";
+            globalThis.location.href = isInsidePages ? "../index.html" : "./index.html";
         };
     }
 }
@@ -61,7 +61,7 @@ export function loadFooter() {
     const footerElem = document.getElementById("footer");
     if (!footerElem) return;
 
-    const isInsidePages = window.location.pathname.indexOf("/pages/") !== -1;
+    const isInsidePages = globalThis.location.pathname.includes("/pages/");
     
     // On définit le chemin vers les fichiers légaux selon où on se trouve
     const legalPath = isInsidePages ? "./" : "./pages/";

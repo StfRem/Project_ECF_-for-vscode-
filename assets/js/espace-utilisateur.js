@@ -47,7 +47,7 @@ function afficherCommandes(commandes) {
             }
         }
 
-        const avisTexte = cmd.avis && cmd.avis.note
+        const avisTexte = cmd.avis?.note
             ? `<p><strong>Votre avis :</strong> ${cmd.avis.note}/5 - ${cmd.avis.commentaire || ""}</p>`
             : "";
 
@@ -64,7 +64,7 @@ function afficherCommandes(commandes) {
                 <p><strong>Ville :</strong> ${cmd.ville || ""}</p>
                 <p><strong>Distance :</strong> ${cmd.distance ?? ""} km</p>
                 <p><strong>Statut :</strong> 
-                    <span class="statut-${(cmd.statut || "").replace(/ /g, '-')}">
+                    <span class="statut-${(cmd.statut || "").replaceAll(' ', '-')}">
                         ${cmd.statut}
                     </span>
                 </p>
@@ -127,7 +127,7 @@ if (target.classList.contains("btn-modifier")) {
     const li = target.closest(".commande-item");
     const details = li.querySelector(".commande-details");
 
-    const nb = details.querySelector("p:nth-of-type(2)").textContent.replace(/\D+/g, "");
+    const nb = details.querySelector("p:nth-of-type(2)").textContent.replaceAll(/\D+/g, "");
     const date = details.querySelector("p:nth-of-type(4)").textContent.split(":").slice(1).join(":").trim();
     const heure = details.querySelector("p:nth-of-type(5)").textContent.split(":").slice(1).join(":").trim();
 
@@ -136,7 +136,7 @@ if (target.classList.contains("btn-modifier")) {
     const cp = details.querySelector("p:nth-of-type(7)").textContent.replace("Code postal :", "").trim();
     const ville = details.querySelector("p:nth-of-type(8)").textContent.replace("Ville :", "").trim();
 
-    const distance = details.querySelector("p:nth-of-type(9)").textContent.replace(/\D+/g, "");
+    const distance = details.querySelector("p:nth-of-type(9)").textContent.replaceAll(/\D+/g, "");
 
     zone.innerHTML = `
         <div class="formulaire-modification">
@@ -280,7 +280,6 @@ if (target.classList.contains("btn-valider-modif")) {
             console.error(err);
             alert("Erreur technique lors de l'enregistrement de l'avis.");
         }
-        return;
     }
 });
 

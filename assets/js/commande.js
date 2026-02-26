@@ -37,14 +37,14 @@ if (!menu) {
 
 // Pré-remplissage des infos client
 const user = JSON.parse(localStorage.getItem("user"));
-if (!user) {
-    document.getElementById("fullname").removeAttribute("readonly");
-    document.getElementById("email").removeAttribute("readonly");
-    document.getElementById("gsm").removeAttribute("readonly");
-} else {
+if (user) {
     document.getElementById("fullname").value = user.fullname;
     document.getElementById("email").value = user.email;
     document.getElementById("gsm").value = user.gsm;
+} else {
+    document.getElementById("fullname").removeAttribute("readonly");
+    document.getElementById("email").removeAttribute("readonly");
+    document.getElementById("gsm").removeAttribute("readonly");
 }
 
 // Gestion du nombre de personnes + prix total
@@ -89,9 +89,9 @@ function updatePrix() {
         fraisLivraison += distance * 0.59;
     }
 
-    window.totalFinal = total + fraisLivraison;
+    globalThis.totalFinal = total + fraisLivraison;
 
-    prixTotal.textContent = `Prix total avec livraison : ${window.totalFinal.toFixed(2)} €`;
+    prixTotal.textContent = `Prix total avec livraison : ${globalThis.totalFinal.toFixed(2)} €`;
 }
 
 // Validation de la commande
@@ -122,7 +122,7 @@ document.getElementById("commande-form").addEventListener("submit", (e) => {
         menuId: menu.id,
         menuTitre: menu.titre,
         nbPersonnes: nb,
-        prixTotal: window.totalFinal,
+        prixTotal: globalThis.totalFinal,
         reduction: nb >= menu.personnesMin + 5,
         materiel: menu.materiel,
         adresse: document.getElementById("adresse").value,

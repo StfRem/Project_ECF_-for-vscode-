@@ -1,6 +1,6 @@
 // Vérification de l'accès employé
 const user = JSON.parse(localStorage.getItem("user"));
-if (!user || user.role !== "employe") {
+if (user?.role !== "employe") {
     alert("Accès réservé aux employés.");
     location.href = "./login.html";
 }
@@ -73,9 +73,9 @@ document.getElementById("btn-ajout-menu").addEventListener("click", () => {
     const nom         = prompt("Nom du menu :");
     const description = prompt("Description :");
     const prixStr     = prompt("Prix :");
-    const prix        = parseFloat(prixStr);
+    const prix        = Number.parseFloat(prixStr);
 
-    if (!nom || !description || !prixStr || isNaN(prix) || prix <= 0) {
+    if (!nom || !description || !prixStr || Number.isNaN(prix) || prix <= 0) {
         alert("Tous les champs sont obligatoires et le prix doit être valide.");
         return;
     }
@@ -267,7 +267,7 @@ document.addEventListener("click", (e) => {
         }
         menu.nom         = nom;
         menu.description = description;
-        menu.prix        = parseFloat(prix);
+        menu.prix        = Number.parseFloat(prix);
         saveToLocalStorage("menus", menus);
         afficherMenus();
     }

@@ -4,7 +4,7 @@ const saveToLocalStorage = (key, data) => localStorage.setItem(key, JSON.stringi
 
 // Vérification du rôle administrateur
 const user = JSON.parse(localStorage.getItem("user"));
-if (!user || user.role !== "admin") {
+if (user?.role !== "admin") {
     alert("Accès réservé à l'administrateur.");
     location.href = "./login.html";
 }
@@ -283,7 +283,7 @@ document.addEventListener("click", (e) => {
         }
         menu.nom = nom;
         menu.description = description;
-        menu.prix = parseFloat(prix);
+        menu.prix = Number.parseFloat(prix);
         saveToLocalStorage("menus", menus);
         afficherMenus();
     }
@@ -442,8 +442,8 @@ document.getElementById("btn-ajout-menu").addEventListener("click", () => {
     const nom = prompt("Nom du menu :");
     const description = prompt("Description :");
     const prixStr = prompt("Prix :");
-    const prix = parseFloat(prixStr);
-    if (!nom || !description || !prixStr || isNaN(prix) || prix <= 0) {
+    const prix = Number.parseFloat(prixStr);
+    if (!nom || !description || !prixStr || Number.isNaN(prix) || prix <= 0) {
         alert("Tous les champs sont obligatoires et le prix doit être valide.");
         return;
     }

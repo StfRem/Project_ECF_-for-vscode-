@@ -111,7 +111,7 @@ document.addEventListener("click", (e) => {
     const imgElement = document.getElementById(`img-${menuId}`);
     const menu = menusFromDB.find(m => m.id == menuId);
 
-    let currentIndex = parseInt(imgElement.dataset.index);
+    let currentIndex = Number.parseInt(imgElement.dataset.index);
     let newIndex = currentIndex + direction;
 
     if (newIndex < 0) newIndex = menu.images.length - 1;
