@@ -238,12 +238,37 @@ function afficherHoraires() {
 }
 
 // ÉCOUTEURS D'ÉVÉNEMENTS (les boutons)
+// GESTIONNAIRES D'ÉVÉNEMENTS - Refactorisés
 document.addEventListener("click", (e) => {
     const id = e.target.dataset.id;
+    
+    // Dispatcher vers les bonnes fonctions
+    if (e.target.classList.contains("btn-suspend")) handleSuspendEmploye(id);
+    if (e.target.classList.contains("btn-supprimer")) handleSupprimerEmploye(id);
+    if (e.target.classList.contains("btn-supprimer-menu")) handleSupprimerMenu(id);
+    if (e.target.classList.contains("btn-modifier-menu")) handleModifierMenu(id);
+    if (e.target.classList.contains("btn-supprimer-plat")) handleSupprimerPlat(id);
+    if (e.target.classList.contains("btn-modifier-plat")) handleModifierPlat(id);
+    if (e.target.classList.contains("btn-annuler")) handleAnnulerCommande(id);
+    if (e.target.classList.contains("btn-valider-avis") || e.target.classList.contains("btn-refuser-avis")) handleAvis(e);
+    if (e.target.classList.contains("btn-supprimer-horaire")) handleSupprimerHoraire(id);
+    if (e.target.classList.contains("btn-modifier-horaire")) handleModifierHoraire(id);
+});
 
-    // 1 - EMPLOYÉS
-    if (e.target.classList.contains("btn-suspend")) {
-        fetch("../PHP/suspendEmploye.php", {
+// 1 - EMPLOYÉS
+function handleSuspendEmploye(id) {
+    fetch("../PHP/suspendEmploye.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id })
+    })
+        .then(r => r.json())
+        .then(() => chargerEmployesDepuisServeur());
+}
+
+function handleSupprimerEmploye(id) {
+    if (confirm("Supprimer cet employé ?")) {
+        fetch("../PHP/supprimerEmploye.php", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ id })
@@ -251,156 +276,149 @@ document.addEventListener("click", (e) => {
             .then(r => r.json())
             .then(() => chargerEmployesDepuisServeur());
     }
+}
 
-    if (e.target.classList.contains("btn-supprimer")) {
-        if (confirm("Supprimer cet employé ?")) {
-            fetch("../PHP/supprimerEmploye.php", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ id })
-            })
-                .then(r => r.json())
-                .then(() => chargerEmployesDepuisServeur());
-        }
-    }
-
-    // 2 - MENUS
-    if (e.target.classList.contains("btn-supprimer-menu")) {
-        if (supprimerElement(menus, (newData) => { menus = newData; }, id, "Supprimer ce menu ?")) {
-            saveToLocalStorage("menus", menus);
-            afficherMenus();
-        }
-    }
-    if (e.target.classList.contains("btn-modifier-menu")) {
-        const menu = menus.find(m => m.id === id);
-        if (!menu) return;
-        const nom = prompt("Nom du menu :", menu.nom);
-        const description = prompt("Description :", menu.description);
-        const prix = prompt("Prix :", menu.prix);
-        if (!nom || !description || !prix) {
-            alert("Tous les champs sont obligatoires.");
-            return;
-        }
-        menu.nom = nom;
-        menu.description = description;
-        menu.prix = Number.parseFloat(prix);
+// 2 - MENUS
+function handleSupprimerMenu(id) {
+    if (supprimerElement(menus, (newData) => { menus = newData; }, id, "Supprimer ce menu ?")) {
         saveToLocalStorage("menus", menus);
         afficherMenus();
     }
+}
 
-    // 3 - PLATS
-    if (e.target.classList.contains("btn-supprimer-plat")) {
-        if (supprimerElement(plats, (newData) => { plats = newData; }, id, "Supprimer ce plat ?")) {
-            saveToLocalStorage("plats", plats);
-            afficherPlats();
-        }
+function handleModifierMenu(id) {
+    const menu = menus.find(m => m.id === id);
+    if (!menu) return;
+    
+    const nom = prompt("Nom du menu :", menu.nom);
+    const description = prompt("Description :", menu.description);
+    const prix = prompt("Prix :", menu.prix);
+    
+    if (!nom || !description || !prix) {
+        alert("Tous les champs sont obligatoires.");
+        return;
     }
-    if (e.target.classList.contains("btn-modifier-plat")) {
-        const plat = plats.find(p => p.id === id);
-        if (!plat) return;
-        const nom = prompt("Nom du plat :", plat.nom);
-        const description = prompt("Description :", plat.description);
-        if (!nom || !description) {
-            alert("Tous les champs sont obligatoires.");
-            return;
-        }
-        plat.nom = nom;
-        plat.description = description;
+    
+    menu.nom = nom;
+    menu.description = description;
+    menu.prix = Number.parseFloat(prix);
+    saveToLocalStorage("menus", menus);
+    afficherMenus();
+}
+
+// 3 - PLATS
+function handleSupprimerPlat(id) {
+    if (supprimerElement(plats, (newData) => { plats = newData; }, id, "Supprimer ce plat ?")) {
         saveToLocalStorage("plats", plats);
         afficherPlats();
     }
+}
 
-    // 4 - COMMANDES
-    if (e.target.classList.contains("btn-annuler")) {
-        const commande = commandes.find(cmd => cmd.id === id);
-        if (!commande) return;
+function handleModifierPlat(id) {
+    const plat = plats.find(p => p.id === id);
+    if (!plat) return;
+    
+    const nom = prompt("Nom du plat :", plat.nom);
+    const description = prompt("Description :", plat.description);
+    
+    if (!nom || !description) {
+        alert("Tous les champs sont obligatoires.");
+        return;
+    }
+    
+    plat.nom = nom;
+    plat.description = description;
+    saveToLocalStorage("plats", plats);
+    afficherPlats();
+}
 
-        const contact = prompt("Mode de contact utilisé pour prévenir le client (appel ou mail) :");
-        const motif = prompt("Motif de l'annulation :");
+// 4 - COMMANDES
+function handleAnnulerCommande(id) {
+    const commande = commandes.find(cmd => cmd.id === id);
+    if (!commande) return;
 
-        if (!contact || !motif) {
-            alert("Annulation annulée : tous les champs sont obligatoires.");
-            return;
-        }
+    const contact = prompt("Mode de contact utilisé pour prévenir le client (appel ou mail) :");
+    const motif = prompt("Motif de l'annulation :");
 
-        // On envoie au backend pour mettre à jour la commande en BDD
-        fetch("../PHP/annulerCommande.php", {
+    if (!contact || !motif) {
+        alert("Annulation annulée : tous les champs sont obligatoires.");
+        return;
+    }
+
+    fetch("../PHP/annulerCommande.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, contact, motif })
+    })
+        .then(r => r.json())
+        .then(result => {
+            if (result.success) {
+                alert("Commande annulée avec succès !");
+                chargerCommandesDepuisServeur();
+            } else {
+                alert("Erreur : " + result.message);
+            }
+        });
+}
+
+// 5 - AVIS
+function handleAvis(e) {
+    const idAvis = e.target.dataset.id;
+    const action = e.target.classList.contains("btn-valider-avis") ? 'valider' : 'supprimer';
+
+    if (action === 'supprimer' && !confirm("Supprimer cet avis ?")) return;
+
+    fetch("../PHP/modifierStatutAvis.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: idAvis, action: action })
+    })
+        .then(r => r.json())
+        .then(result => {
+            if (result.success) {
+                chargerAvisDepuisServeur();
+            }
+        });
+}
+
+// 6 - HORAIRES
+function handleSupprimerHoraire(id) {
+    if (confirm("Supprimer cet horaire ?")) {
+        fetch("../PHP/supprimerHoraire.php", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ id, contact, motif })
+            body: JSON.stringify({ id })
         })
             .then(r => r.json())
-            .then(result => {
-                if (result.success) {
-                    alert("Commande annulée avec succès !");
-                    chargerCommandesDepuisServeur(); // recharge depuis MySQL
-                } else {
-                    alert("Erreur : " + result.message);
-                }
+            .then(() => chargerHorairesDepuisServeur())
+            .catch(err => {
+                console.error("Erreur:", err);
+                alert("Une erreur est survenue.");
             });
     }
+}
 
-    // 5 - AVIS
-    if (e.target.classList.contains("btn-valider-avis") || e.target.classList.contains("btn-refuser-avis")) {
-        const idAvis = e.target.dataset.id;
-        const action = e.target.classList.contains("btn-valider-avis") ? 'valider' : 'supprimer';
+function handleModifierHoraire(id) {
+    const h = horaires.find(h => h.id === id);
+    if (!h) return;
 
-        if (action === 'supprimer' && !confirm("Supprimer cet avis ?")) return;
+    const jour = prompt("Jour :", h.jour);
+    const ouverture = prompt("Heure d'ouverture :", h.ouverture);
+    const fermeture = prompt("Heure de fermeture :", h.fermeture);
 
-        fetch("../PHP/modifierStatutAvis.php", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ id: idAvis, action: action })
-        })
-            .then(r => r.json())
-            .then(result => {
-                if (result.success) {
-                    chargerAvisDepuisServeur(); // Rafraîchit la liste
-                }
-            });
+    if (!jour || !ouverture || !fermeture) {
+        alert("Tous les champs sont obligatoires.");
+        return;
     }
 
-    // 6 - HORAIRES
-    if (e.target.classList.contains("btn-supprimer-horaire")) {
-
-        const id = e.target.dataset.id; // ← Récupération de l'ID
-
-        if (confirm("Supprimer cet horaire ?")) {
-            fetch("../PHP/supprimerHoraire.php", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ id })
-            })
-                .then(r => r.json())
-                .then(() => chargerHorairesDepuisServeur());
-        }
-    }
-
-    if (e.target.classList.contains("btn-modifier-horaire")) {
-
-        const id = e.target.dataset.id;
-
-        const h = horaires.find(h => h.id == id);
-        if (!h) return;
-
-        const jour = prompt("Jour :", h.jour);
-        const ouverture = prompt("Heure d'ouverture :", h.ouverture);
-        const fermeture = prompt("Heure de fermeture :", h.fermeture);
-
-        if (!jour || !ouverture || !fermeture) {
-            alert("Tous les champs sont obligatoires.");
-            return;
-        }
-
-        fetch("../PHP/modifierHoraire.php", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ id, jour, ouverture, fermeture })
-        })
-            .then(r => r.json())
-            .then(() => chargerHorairesDepuisServeur());
-    }
-});
+    fetch("../PHP/modifierHoraire.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, jour, ouverture, fermeture })
+    })
+        .then(r => r.json())
+        .then(() => chargerHorairesDepuisServeur());
+}
 
 
 
